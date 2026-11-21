@@ -1,0 +1,7 @@
+node_modules/
+.next/
+preview*.log
+*.tsbuildinfo
+next-env.d.ts
+.vercel/
+.reference-local/

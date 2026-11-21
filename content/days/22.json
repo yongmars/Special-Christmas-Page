@@ -1,0 +1,16 @@
+{
+  "day": 22,
+  "kind": "quiz",
+  "title": "クリスマスカラー",
+  "releaseDate": "2026-12-22",
+  "question": "ツリーの葉と同じ色はどれ？",
+  "choices": ["赤", "緑", "金"],
+  "answer": 1,
+  "explanation": "このお部屋のツリーは深い緑色です。",
+  "lines": [
+    {
+      "who": "lux",
+      "text": "一緒に考えてくれてありがとう！"
+    }
+  ]
+}

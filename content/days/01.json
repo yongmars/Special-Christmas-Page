@@ -1,0 +1,16 @@
+{
+  "day": 1,
+  "kind": "wallpaper",
+  "title": "12月カレンダー壁紙",
+  "releaseDate": "2026-12-01",
+  "images": [
+    {
+      "file": "wall-desktop.png",
+      "alt": "12月のカレンダー壁紙（横長）"
+    },
+    {
+      "file": "wall-phone.png",
+      "alt": "12月のカレンダー壁紙（縦長）"
+    }
+  ]
+}

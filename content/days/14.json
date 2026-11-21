@@ -1,0 +1,16 @@
+{
+  "day": 14,
+  "kind": "quiz",
+  "title": "トナカイ",
+  "releaseDate": "2026-12-14",
+  "question": "ノクトの描いたトナカイの頭にあるものは？",
+  "choices": ["王冠", "リボン", "角"],
+  "answer": 2,
+  "explanation": "枝のような角が目印です。",
+  "lines": [
+    {
+      "who": "lux",
+      "text": "一緒に考えてくれてありがとう！"
+    }
+  ]
+}

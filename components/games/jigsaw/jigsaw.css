@@ -1,0 +1,122 @@
+.jg-app {
+  --pine: #193f33; --red: #a83c3c; --gold: #b78b4b; --line: #ded6c5;
+  min-height: 100svh; color: var(--pine); background-color: #faf7ef;
+  background-image: radial-gradient(#c2ae8b40 .85px, transparent .95px);
+  background-size: 14px 14px; font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+}
+.jg-app *, .jg-app *::before, .jg-app *::after { box-sizing: border-box; }
+.jg-app :is(button,a) { font: inherit; -webkit-tap-highlight-color: transparent; }
+.jg-app button { cursor: pointer; }
+.jg-app :is(button,a,[tabindex]):focus-visible { outline: 3px solid #cc9134; outline-offset: 3px; }
+.jg-top {
+  background: #193f33; color: #fff9e9; border-bottom: 3px solid #cfab69;
+  background-image: linear-gradient(110deg, transparent 67%, #264c3f 100%);
+}
+.jg-top-inner, .jg-main { width: min(1024px, calc(100% - 64px)); margin: auto; }
+.jg-top-inner { min-height: 63px; display: flex; align-items: center; justify-content: space-between; }
+.jg-brand { display: flex; align-items: center; gap: 11px; font-family: "Yu Mincho", "Hiragino Mincho ProN", serif; font-weight: 700; letter-spacing: .11em; font-size: 19px; }
+.jg-back, .jg-action, .jg-guide-control { display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+.jg-app .jg-back { color: inherit; border: 1px solid #c1cdb45c; border-radius: 999px; background: transparent; font-size: 14px; font-weight: 600; padding: 7px 15px 7px 10px; }
+.jg-back:hover { background: #ffffff13; }
+.jg-main { padding-bottom: 24px; }
+.jg-hero { position: relative; padding: 34px 0 27px; overflow: hidden; }
+.jg-meta { display: flex; align-items: center; gap: 10px; color: #6c6c5e; font-weight: 650; font-size: 13px; letter-spacing: .09em; }
+.jg-meta span { color: #44694e; background: #e6ecdd; border: 1px solid #ccd7be; padding: 2px 11px; border-radius: 100px; display: flex; align-items: center; gap: 6px; }
+.jg-meta span i { display: block; width: 6px; height: 6px; border-radius: 50%; background: #63885b; }
+.jg-hero h1 { position: relative; margin: 9px 0 7px; font: 800 clamp(29px, 3.5vw, 47px)/1.28 "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif; letter-spacing: .035em; }
+.jg-hero p { margin: 0; font-size: 15px; font-weight: 600; color: #866543; letter-spacing: .06em; display: flex; align-items: center; gap: 8px; }
+.jg-hero p svg { color: var(--gold); }
+.jg-baubles { pointer-events: none; position: absolute; right: 19px; top: 0; width: 143px; height: 100%; }
+.jg-baubles i { position: absolute; left: 0; top: 47px; width: 39px; height: 42px; border-radius: 50%; background: repeating-linear-gradient(135deg,#b44841 0 8px,#dba35f 8px 10px,#a83e3d 10px 15px); box-shadow: inset -4px -3px 0 #532e2719; }
+.jg-baubles i::before { content: ""; position: absolute; width: 1px; background: #bc965e; height: 100px; bottom: 100%; left: 50%; }
+.jg-baubles i::after { content: ""; position: absolute; background: #b69657; width: 32%; height: 5px; border-radius: 2px 2px 0 0; bottom: 96%; left: 34%; }
+.jg-baubles i:nth-child(2) { left: 55px; top: 77px; width: 47px; height: 48px; background: radial-gradient(ellipse at 38% 25%,#f1d59c,#d1a656 65%,#b48c49); }
+.jg-baubles i:nth-child(3) { left: 110px; top: 28px; width: 31px; height: 35px; background: repeating-linear-gradient(45deg,#426c58 0 7px,#bdba84 7px 9px,#426c58 9px 13px); }
+.jg-surface { position: relative; display: grid; grid-template-columns: 1.06fr 1fr; gap: 20px; isolation: isolate; }
+.jg-panel { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 15px; background: #fffdf6; padding: 17px 20px 20px; box-shadow: 0 3px 0 #cbbd9d39; }
+.jg-panel-head { display: flex; justify-content: space-between; align-items: center; gap: 5px; min-height: 27px; margin: 0 1px 13px; }
+.jg-panel-head h2 { margin: 0; display: flex; gap: 9px; align-items: center; font-size: 17px; letter-spacing: .035em; }
+.jg-panel-head h2 svg { color: #69816b; }
+.jg-count { display: flex; align-items: center; gap: 5px; font-size: 14px; font-variant-numeric: tabular-nums; color: #606b5f; }
+.jg-count b { color: var(--pine); }
+.jg-meter { width: 54px; height: 5px; margin-right: 4px; background: #e5e5d6; border-radius: 20px; overflow: hidden; }
+.jg-meter i { display: block; background: #52795c; height: 100%; transition: width .2s; }
+.jg-frame { position: relative; padding: 10px; border: 1px solid #315343; border-radius: 7px; background: #395b49; box-shadow: inset 0 0 0 3px #4d6a55, inset 0 0 0 4px #b5a26b; }
+.jg-board { position: relative; aspect-ratio: 1; overflow: hidden; background: #f6f0df; box-shadow: 0 0 0 1px #b9a77a; }
+.jg-board > :is(img,svg) { position: absolute; inset: 0; width: 100%; height: 100%; }
+.jg-board img { opacity: 0; object-fit: cover; transition: opacity .25s; }
+.jg-board img.guide { opacity: .42; }
+.jg-board img.solved { opacity: 1; }
+.jg-target { fill: transparent; stroke: #685d4d80; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.jg-target.highlighted { fill: #ffce5288; stroke: #956c18; stroke-width: 3; }
+.jg-tray-panel { background-color: #fcf8ef; }
+.jg-tray-panel h2 svg { color: var(--red); }
+.jg-remaining { border: 1px solid #e5d6c0; background: #f7efdf; color: #795d40; border-radius: 20px; padding: 3px 10px; font-size: 13px; font-weight: 600; }
+.jg-tray { --tray-cols: var(--size); position: relative; flex: 1; display: grid; grid-template-columns: repeat(var(--tray-cols), 1fr); grid-auto-rows: 1fr; border: 1px dashed #ccbfa5; border-radius: 7px;
+  background: radial-gradient(#c5b18d50 .9px,transparent 1px) 0 0/10px 10px, #f6f0e3; }
+.jg-tray i { align-self: center; justify-self: center; width: 5px; height: 5px; background: #b6a88c6b; transform: rotate(45deg); }
+.jg-overlay { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; touch-action: none; user-select: none; -webkit-user-select: none; }
+.jg-piece { pointer-events: none; }
+.jg-piece.loose { cursor: grab; touch-action: none; filter: drop-shadow(0 2px 1.5px #452e2452); }
+.jg-piece.loose:active { cursor: grabbing; }
+.jg-piece-edge { fill: transparent; stroke: #fff8e6a6; stroke-width: .7px; }
+.jg-piece.loose .jg-piece-edge { pointer-events: fill; touch-action: none; stroke: #fffbec; stroke-width: 1.4px; }
+.jg-piece.hinted .jg-piece-edge, .jg-piece:focus-visible .jg-piece-edge { stroke: #e6ab28; stroke-width: 4px; }
+.jg-piece.clicked-in .jg-piece-edge { animation: jg-snap .4s ease-out; }
+@keyframes jg-snap { from { fill: #ffdb7680; stroke: #e5a935; stroke-width: 3px; } }
+.jg-controls { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 18px 1px 0; }
+.jg-actions { display: flex; gap: 10px; }
+.jg-app .jg-guide-control, .jg-app .jg-action { min-height: 42px; border-radius: 8px; font-weight: 650; font-size: 14px; }
+.jg-guide-control { border: 0; padding: 0 3px; background: transparent; color: #485e4d; }
+.jg-switch { width: 34px; height: 20px; padding: 3px; background: #a6a798; border-radius: 20px; }
+.jg-switch i { display: block; width: 14px; height: 14px; border-radius: 50%; background: #fffdf2; transition: transform .18s; }
+.jg-guide-control[aria-checked=true] .jg-switch { background: #40684f; }
+.jg-guide-control[aria-checked=true] .jg-switch i { transform: translateX(14px); }
+.jg-action { padding: 7px 16px; background: #fffdf6; border: 1px solid #d2cab8; color: #45584b; }
+.jg-action.hint { color: #895f2c; background: #f8efd9; border-color: #dcca9e; }
+.jg-action:hover { filter: brightness(.96); }
+.jg-app .jg-action.primary { background: var(--pine); border-color: var(--pine); color: #fff8e5; }
+.jg-instruction { display: flex; justify-content: center; align-items: center; gap: 8px; color: #696851; font-size: 14px; margin: 19px 0 0; }
+.jg-instruction svg { color: #9d7654; flex: none; }
+.jg-endmark { display: flex; justify-content: center; align-items: center; gap: 12px; color: #ac905a; margin: 21px auto 0; }
+.jg-endmark i { width: 50px; height: 1px; background: #d7c9ac; }
+.jg-cover { max-width: 410px; margin: 0 auto; display: grid; gap: 18px; }
+.jg-cover img { width: 100%; border: 7px solid #385b47; border-radius: 8px; }
+.jg-success { margin-top: 15px; position: relative; overflow: hidden; padding: 18px; text-align: center; border: 1px solid #d7bf87; border-radius: 10px; background: #fff8e6; }
+.jg-success h2 { margin: 0 0 12px; font: bold 30px/1.4 "Yu Mincho", serif; color: var(--red); }
+.jg-success > div:last-child { position: relative; display: flex; justify-content: center; gap: 10px; }
+.jg-success .jg-back { border-color: #c2b79c; }
+.jg-sparkles { position: absolute; inset: 0; pointer-events: none; }
+.jg-sparkles i { position: absolute; left: calc(3% + var(--i)*8.2%); top: calc(7% + mod(var(--i)*31,74)*1%); color: #bc8b32; animation: jg-twinkle 1.2s ease-in-out calc(var(--i)*-.13s) 3 alternate; }
+@keyframes jg-twinkle { from { opacity: .1; transform: scale(.5) rotate(-20deg); } to { opacity: 1; transform: scale(1.1) rotate(15deg); } }
+.jg-sr { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
+@media (max-width: 760px) {
+  .jg-top-inner, .jg-main { width: calc(100% - 28px); }
+  .jg-panel { padding: 11px; } .jg-surface { gap: 10px; }
+  .jg-panel-head { margin-bottom: 8px; } .jg-panel-head h2 { font-size: 15px; }
+  .jg-baubles { right: 1px; transform: scale(.7); transform-origin: top right; }
+  .jg-frame { padding: 7px; }
+}
+@media (max-width: 760px) and (orientation: portrait) {
+  .jg-top-inner { min-height: 47px; } .jg-brand { font-size: 16px; gap: 6px; } .jg-brand svg { height: 30px; }
+  .jg-hero { padding: 15px 0 14px; } .jg-hero h1 { font-size: clamp(22px,5.7vw,34px); margin: 6px 0; }
+  .jg-hero p { font-size: 13px; } .jg-baubles { transform: scale(.46); }
+  .jg-surface { grid-template-columns: 1fr; gap: 9px; }
+  .jg-board-panel { align-items: center; } .jg-panel-head { align-self: stretch; }
+  .jg-frame { width: min(100%, 38svh); }
+  .jg-tray { --tray-cols: var(--compact-cols); flex: none; height: clamp(106px,18svh,168px); }
+  .jg-controls { margin-top: 10px; } .jg-actions { gap: 6px; } .jg-action { padding: 6px 10px; }
+  .jg-instruction { font-size: 13px; margin-top: 12px; } .jg-endmark { margin-top: 12px; }
+}
+@media (max-height: 580px) and (orientation: landscape) {
+  .jg-top-inner { min-height: 36px; } .jg-brand { font-size: 15px; } .jg-brand svg { height: 27px; }
+  .jg-hero { padding: 7px 0; display: flex; align-items: center; gap: 12px; }
+  .jg-hero h1 { order: -1; font-size: 21px; margin: 0; } .jg-hero p, .jg-baubles { display: none; }
+  .jg-main { max-width: min(95vw, 147svh); } .jg-panel { padding: 7px; }
+  .jg-panel-head { min-height: 20px; margin-bottom: 5px; } .jg-panel-head h2 { font-size: 14px; }
+  .jg-frame { padding: 5px; } .jg-controls { margin-top: 6px; }
+  .jg-instruction, .jg-endmark { margin-top: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jg-app *, .jg-app *::before, .jg-app *::after { animation: none !important; transition: none !important; }
+}

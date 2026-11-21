@@ -1,0 +1,83 @@
+[
+  {
+    "id": "memory",
+    "title": "神経衰弱",
+    "releaseDate": "2026-12-06",
+    "href": "/games/memory",
+    "status": "development",
+    "decoration": {
+      "label": "ツリーのライト",
+      "id": "lights"
+    },
+    "intro": "同じ絵柄のカードを2枚ずつ見つけよう。",
+    "faces": [
+      {
+        "name": "星",
+        "symbol": "★",
+        "file": ""
+      },
+      {
+        "name": "ベル",
+        "symbol": "♬",
+        "file": ""
+      },
+      {
+        "name": "ツリー",
+        "symbol": "♠",
+        "file": ""
+      },
+      {
+        "name": "雪",
+        "symbol": "❄",
+        "file": ""
+      },
+      {
+        "name": "くつ下",
+        "symbol": "🧦",
+        "file": ""
+      },
+      {
+        "name": "キャンドル",
+        "symbol": "🕯",
+        "file": ""
+      },
+      {
+        "name": "リボン",
+        "symbol": "🎀",
+        "file": ""
+      },
+      {
+        "name": "おうち",
+        "symbol": "⌂",
+        "file": ""
+      }
+    ],
+    "backFile": ""
+  },
+  {
+    "id": "slide",
+    "title": "スライドパズル",
+    "releaseDate": "2026-12-13",
+    "href": "/games/slide",
+    "status": "development",
+    "decoration": {
+      "label": "クリスマスリース",
+      "id": "wreath"
+    },
+    "intro": "ピースをすべらせて、1枚の絵を完成させよう。",
+    "image": "winter.svg"
+  },
+  {
+    "id": "jigsaw",
+    "title": "ジグソーパズル",
+    "releaseDate": "2026-12-20",
+    "href": "/games/jigsaw",
+    "status": "development",
+    "decoration": {
+      "label": "ツリーの下のプレゼント",
+      "id": "presents"
+    },
+    "intro": "ピースを回して、ぴったりの場所にはめよう。",
+    "image": "winter.svg"
+  }
+]
