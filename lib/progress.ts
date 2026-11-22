@@ -1,8 +1,8 @@
 "use client";
 import { useSyncExternalStore } from "react";
 import type { GameId } from "./types";
-type RecordState = { opened: number[]; clears: GameId[] };
-const empty: RecordState = { opened: [], clears: [] };
+type RecordState = { opened: number[]; clears: GameId[]; slideBest: Partial<Record<number, number>> };
+const empty: RecordState = { opened: [], clears: [], slideBest: {} };
 const cache = new Map<string, RecordState>(),
   last = new Map<string, string | null>(),
   volatile = new Set<string>();
@@ -26,6 +26,10 @@ function read(key: string): RecordState {
       try {
         const p = JSON.parse(raw);
         value = {
+          slideBest: Object.fromEntries(
+            [3, 4].filter(n => Number.isSafeInteger(p?.slideBest?.[n]) && p.slideBest[n] > 0)
+              .map(n => [n, p.slideBest[n]]),
+          ),
           opened: Array.isArray(p?.opened)
             ? p.opened.filter(
                 (d: number) => Number.isInteger(d) && d >= 1 && d <= 25,
@@ -84,5 +88,11 @@ export function useProgress(preview: boolean) {
         : p.clears.filter((g) => g !== game),
     }));
   }
-  return { state, opened, clear, reset: () => change(() => empty) };
+  function recordSlideBest(size: number, moves: number) {
+    change(p => ({
+      ...p,
+      slideBest: { ...p.slideBest, [size]: Math.min(moves, p.slideBest[size] ?? moves) },
+    }));
+  }
+  return { state, opened, clear, recordSlideBest, reset: () => change(() => empty) };
 }

@@ -64,8 +64,9 @@
       "label": "クリスマスリース",
       "id": "wreath"
     },
-    "intro": "ピースをすべらせて、1枚の絵を完成させよう。",
-    "image": "winter.svg"
+    "intro": "空白のとなりのピースをタップして、ノクトとルクスのクリスマスの絵を完成させよう。",
+    "illustrationTitle": "クリスマスの猫耳少年たちと贈り物",
+    "image": "christmas-gifts.webp"
   },
   {
     "id": "jigsaw",

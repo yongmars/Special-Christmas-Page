@@ -75,16 +75,25 @@ async function slide(page, n) {
     (n) => document.querySelectorAll(".slide-board button").length === n * n,
     n,
   );
-  const seq = await board
-    .getByRole("button")
-    .evaluateAll((els) =>
-      els.map((b) => Number(b.getAttribute("aria-label").split(" ")[1]) - 1),
-    );
+  const readTiles = () => board.getByRole("button").evaluateAll(els =>
+    els.map(b => b.classList.contains("blank") ? els.length - 1 : Number(b.getAttribute("aria-label").split(" ")[1]) - 1));
+  const seq = await readTiles();
+  await board.locator("button:enabled").first().click();
+  await page.getByRole("button", {name:"リセット",exact:true}).click();
+  assert.deepEqual(await readTiles(), seq);
+  await page.getByRole("button", {name:"完成図を見る"}).click();
+  await page.locator(".guide-image").waitFor();
+  await page.locator(".guide-image").waitFor({state:"hidden",timeout:6000});
+  assert.deepEqual(await readTiles(), seq);
   for (const v of solution(seq, n))
     await board
       .getByRole("button", { name: "ピース " + v, exact: true })
       .click();
   assert.match(await page.locator(".game-stat").innerText(), /完成/);
+  assert.match(await page.locator(".game-stat").innerText(), /ベスト記録 \d+ 手/);
+  await page.waitForFunction(() => document.querySelector(".slide-result img")?.naturalWidth === 1254);
+  await page.getByRole("button", {name:"もう一度あそぶ"}).click();
+  await board.waitFor();
 }
 async function jigsaw(page, touch) {
   const pieces = page.locator(".jg-piece");

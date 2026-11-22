@@ -850,6 +850,25 @@ footer > a {
 .slide-board .blank {
   background: #52675b !important;
 }
+.slide-controls { flex-wrap: wrap; }
+.slide-result {
+  margin: 16px auto;
+  padding: 16px 8px;
+  text-align: center;
+  background: #fff8e6;
+  border: 1px solid #d7bf87;
+  border-radius: 10px;
+}
+.slide-result h2 { color: #963d43; }
+.slide-result img {
+  display: block;
+  width: min(100%, 76svh);
+  height: auto;
+  margin: 12px auto;
+  border: 4px solid #dfc38c;
+  border-radius: 6px;
+}
+.slide-result p { margin-bottom: 12px; }
 .game-actions {
   display: flex;
   gap: 8px;
