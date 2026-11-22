@@ -1,6 +1,7 @@
 {
   "day": 6,
-  "kind": "game",
-  "title": "神経衰弱",
-  "gameId": "memory"
+  "kind": "special",
+  "title": "クリスマス4コマ",
+  "releaseDate": "2026-12-06",
+  "noteUrl": ""
 }

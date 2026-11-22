@@ -1,16 +1,17 @@
 {
   "day": 12,
-  "kind": "chat",
-  "title": "ルクスの秘密",
+  "kind": "illustration",
+  "title": "雪だるま作り",
   "releaseDate": "2026-12-12",
-  "lines": [
-    {
-      "who": "lux",
-      "text": "窓のそばまで見に行こう！"
-    },
-    {
-      "who": "noct",
-      "text": "うん、一緒に行こう。"
-    }
+  "series": "gallery",
+  "episode": 2,
+  "image": {
+    "file": "picture.webp",
+    "alt": "雪だるまを飾るノクトと雪玉を転がすルクス"
+  },
+  "paragraphs": [
+    "雪がたくさん積もった日。",
+    "ノクトは雪だるまを丁寧に飾り付け、ルクスは大きな雪玉をころころ。",
+    "ふたりで作る雪だるま、どんな仕上がりになるかな？"
   ]
 }

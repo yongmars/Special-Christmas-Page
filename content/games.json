@@ -2,12 +2,18 @@
   {
     "id": "memory",
     "title": "神経衰弱",
-    "releaseDate": "2026-12-06",
+    "releaseDate": "2026-12-03",
     "href": "/games/memory",
-    "status": "development",
+    "status": "ready",
     "decoration": {
       "label": "ツリーのライト",
-      "id": "lights"
+      "id": "lights",
+      "lines": [
+        {
+          "who": "noct",
+          "text": "わあ、ツリーが光った！ きれいだね"
+        }
+      ]
     },
     "intro": "同じ絵柄のカードを2枚ずつ見つけよう。",
     "faces": [
@@ -57,12 +63,18 @@
   {
     "id": "slide",
     "title": "スライドパズル",
-    "releaseDate": "2026-12-13",
+    "releaseDate": "2026-12-10",
     "href": "/games/slide",
-    "status": "development",
+    "status": "ready",
     "decoration": {
       "label": "クリスマスリース",
-      "id": "wreath"
+      "id": "wreath",
+      "lines": [
+        {
+          "who": "lux",
+          "text": "リースも飾れたね！ いい感じ！"
+        }
+      ]
     },
     "intro": "空白のとなりのピースをタップして、ノクトとルクスのクリスマスの絵を完成させよう。",
     "illustrationTitle": "クリスマスの猫耳少年たちと贈り物",
@@ -71,15 +83,61 @@
   {
     "id": "jigsaw",
     "title": "ジグソーパズル",
-    "releaseDate": "2026-12-20",
+    "releaseDate": "2026-12-13",
     "href": "/games/jigsaw",
-    "status": "development",
+    "status": "ready",
     "decoration": {
       "label": "ツリーの下のプレゼント",
-      "id": "presents"
+      "id": "presents",
+      "lines": [
+        {
+          "who": "noct",
+          "text": "プレゼントも並んだね。喜んでくれるかな？"
+        }
+      ]
     },
     "intro": "ピースを回して、ぴったりの場所にはめよう。",
     "illustrationTitle": "雪降るクリスマスマーケットの猫たち",
     "image": "christmas-market.webp"
+  },
+  {
+    "id": "sorting",
+    "title": "プレゼント仕分け",
+    "href": "/games/sorting",
+    "status": "pending",
+    "decoration": {
+      "id": "cake",
+      "label": "ホールショートケーキ",
+      "lines": [
+        {
+          "who": "lux",
+          "text": "ケーキだ！ ねえ、ちょっと味見しちゃダメ？"
+        }
+      ]
+    },
+    "intro": "クリスマスの贈り物を仕分けるゲームです。",
+    "releaseDate": "2026-12-17"
+  },
+  {
+    "id": "delivery",
+    "title": "プレゼント配達",
+    "href": "/games/delivery",
+    "status": "pending",
+    "decoration": {
+      "id": "windows",
+      "label": "窓の外の家の明かり",
+      "lines": [
+        {
+          "who": "noct",
+          "text": "みんなにプレゼントも届いたし……"
+        },
+        {
+          "who": "lux",
+          "text": "これでクリスマスの準備は完璧だね！"
+        }
+      ]
+    },
+    "intro": "みんなの家にプレゼントを届けるゲームです。",
+    "releaseDate": "2026-12-20"
   }
 ]

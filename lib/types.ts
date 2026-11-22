@@ -1,6 +1,6 @@
 import { mount, publicPath } from "./public-path";
 export type Who = "noct" | "lux";
-export type GameId = "memory" | "slide" | "jigsaw";
+export type GameId = "memory" | "slide" | "jigsaw" | "sorting" | "delivery";
 export type Kind =
   "wallpaper" | "story" | "illustration" | "chat" | "quiz" | "game" | "special";
 export type Art = { file: string; alt: string };
@@ -10,18 +10,23 @@ export type Day = Base &
   (
     | { kind: "wallpaper"; images: Art[] }
     | {
-        kind: "story" | "illustration" | "special";
+        kind: "story" | "illustration";
+        series: Who | "gallery"; episode: number; paragraphs: string[]; image: Art;
+      }
+    | { kind: "special"; noteUrl: string }
+    | {
+        kind: "special"; status: "pending";
         body: string;
         image: Art;
         lines: Line[];
       }
     | {
         kind: "quiz";
+        id: string; who: Who; correct: string; incorrect: string;
         question: string;
         choices: string[];
         answer: number;
         explanation: string;
-        lines: Line[];
       }
     | { kind: "chat"; lines: Line[] }
     | { kind: "game"; gameId: GameId }
@@ -33,7 +38,7 @@ export type Game = {
   releaseDate: string;
   href: string;
   status: string;
-  decoration: { id: string; label: string };
+  decoration: { id: string; label: string; lines: Line[] };
   intro: string;
   image?: string;
   illustrationTitle?: string;

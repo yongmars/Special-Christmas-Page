@@ -46,12 +46,12 @@ if (process.argv[2] === "serve") {
       404,
     );
     assert.equal(
-      (await get("/art/1/wall-desktop.png?preview=2027-01-01")).status,
+      (await get("/art/1/december.png?preview=2027-01-01")).status,
       404,
     );
     assert.ok(
       !(await body("/calendar/2?date=2026-12-25")).includes(
-        "ルクスが暖炉に飾りたいものは",
+        "クリスマスが近づいてきました",
       ),
     );
     browser = await chromium.launch({
@@ -66,16 +66,14 @@ if (process.argv[2] === "serve") {
       .getByRole("link", { name: "今日のプレゼントを開ける" })
       .waitFor({ timeout: 12000 });
     assert.equal(await p.locator("a.door").count(), 1);
-    assert.equal((await get("/art/1/wall-phone.png")).status, 200);
+    assert.equal((await get("/art/1/winter-night.png")).status, 200);
     for (const [day, id] of [
-      [6, "memory"],
-      [13, "slide"],
-      [20, "jigsaw"],
+      [3, "memory"], [10, "slide"], [13, "jigsaw"], [17, "sorting"], [20, "delivery"],
     ]) {
-      await clock("2026-12-" + String(day - 1).padStart(2, "0") + "T23:00:00");
+      await clock("2026-12-" + String(day - 1).padStart(2, "0") + "T23:59:55");
       assert.match(await body("/games/" + id), /に公開します/);
       await clock("2026-12-" + String(day).padStart(2, "0") + "T00:00:00");
-      assert.match(await body("/games/" + id), /開発中です/);
+      assert.match(await body("/games/" + id), day < 17 ? /あそぶ/ : /準備中です/);
       assert.match(await body("/calendar/" + day), /ゲームの入口へ/);
     }
     await clock("2027-01-01T00:00:00");
@@ -86,8 +84,8 @@ if (process.argv[2] === "serve") {
       404,
     );
     await p.goto(base + "/calendar/9");
-    await p.getByRole("button", { name: /そり/ }).click();
-    await p.getByRole("status").filter({ hasText: "正解！" }).waitFor();
+    await p.getByRole("button",{name:/Bトルコ|B トルコ/}).click();
+    await p.locator(".answer.success").waitFor();
     console.log(
       "Production: protected routes/assets, JST midnight live transition, game gates, archive and quiz passed.",
     );

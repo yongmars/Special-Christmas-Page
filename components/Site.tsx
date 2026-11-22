@@ -1,6 +1,6 @@
 "use client";
 import { Link } from "@/lib/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "@/lib/navigation";
 import { nextMidnight, season } from "@/lib/season";
 import { useProgress } from "@/lib/progress";
@@ -23,7 +23,26 @@ function Brand() {
     </span>
   );
 }
-function Home({ ctx, decorations }: { ctx: Context; decorations: string[] }) {
+function RewardNotice({ games, preview }: { games: Game[]; preview: boolean }) {
+  const progress = useProgress(preview);
+  const [current, setCurrent] = useState<Game | null>(null);
+  const next = progress.state.pendingRewards[0];
+  useEffect(() => {
+    if (current && !progress.state.clears.includes(current.id)) setCurrent(null);
+    else if (!current && next) {
+      setCurrent(games.find(g => g.id === next) ?? null);
+      progress.readReward(next);
+    }
+  }, [current, next, progress.state.clears, games]);
+  return current ? (
+    <aside className="reward-notice" aria-live="polite">
+      <strong>{current.decoration.label}</strong>
+      {current.decoration.lines.map(line => <p key={line.who}>{line.who === "noct" ? "ノクト" : "ルクス"}「{line.text}」</p>)}
+      <button onClick={() => setCurrent(null)}>{next ? "次のメッセージ" : "閉じる"}</button>
+    </aside>
+  ) : null;
+}
+function Home({ ctx, decorations, games }: { ctx: Context; decorations: string[]; games: Game[] }) {
   const s = season(ctx.date);
   return (
     <>
@@ -43,7 +62,7 @@ function Home({ ctx, decorations }: { ctx: Context; decorations: string[] }) {
           <p>
             雪降る夜、ふたりのお部屋へようこそ。
             <br />
-            毎日の贈りものを、一緒に開けよう。
+            {ctx.date < "2026-12-01" ? "11月29日先行公開。最初の扉は12月1日に開くよ。" : "毎日の贈りものを、一緒に開けよう。"}
           </p>
           <span className="hero-dates">
             <Icon name="calendar" size={15} /> 2026.12.01 <i>—</i> 12.25
@@ -55,6 +74,7 @@ function Home({ ctx, decorations }: { ctx: Context; decorations: string[] }) {
         <i className="corner bl" />
         <i className="corner br" />
       </div>
+      <RewardNotice games={games} preview={ctx.preview} />
       <div className="present-bar">
         <div className="countdown">
           <span className="date-stamp">
@@ -191,6 +211,7 @@ export function Site({
         )}
         {home && (
           <Home
+            games={games}
             ctx={ctx}
             decorations={games
               .filter((g) => p.state.clears.includes(g.id))

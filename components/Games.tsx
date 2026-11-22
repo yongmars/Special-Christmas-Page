@@ -6,7 +6,7 @@ import { Icon } from "./Icon";
 import { Memory } from "./games/Memory";
 import { Slide } from "./games/Slide";
 import Trial from "./games/jigsaw/Trial";
-const symbols = { memory: "card", slide: "grid", jigsaw: "puzzle" };
+const symbols = { memory: "card", slide: "grid", jigsaw: "puzzle", sorting: "gift", delivery: "gift" };
 export function Games({ ctx, games }: { ctx: Context; games: Game[] }) {
   return (
     <section className="section" id="games">
@@ -23,7 +23,7 @@ export function Games({ ctx, games }: { ctx: Context; games: Game[] }) {
               <span className="stamp">
                 <Icon name={symbols[g.id]} size={44} />
               </span>
-              <small>12.{g.releaseDate.slice(-2)} SUN</small>
+              <small>12.{g.releaseDate.slice(-2)} {new Intl.DateTimeFormat("en", { weekday: "short", timeZone: "Asia/Tokyo" }).format(new Date(g.releaseDate)).toUpperCase()}</small>
             </div>
             <div className="game-info">
               <h3>{g.title}</h3>
@@ -34,9 +34,9 @@ export function Games({ ctx, games }: { ctx: Context; games: Game[] }) {
                 />
                 {ctx.date < g.releaseDate
                   ? "12月" + Number(g.releaseDate.slice(-2)) + "日公開"
-                  : ctx.preview || g.status === "ready"
+                  : g.status === "ready"
                     ? "あそべます"
-                    : "開発中"}
+                    : "準備中"}
               </span>
             </div>
           </Link>
@@ -58,7 +58,7 @@ export function GameDetail({
   const day = ctx.doors.find((d) => d.gameId === g.id)!.day;
   const image = (f: string) => asset(ctx, day, f);
   const active =
-    ctx.date >= g.releaseDate && (ctx.preview || g.status === "ready");
+    ctx.date >= g.releaseDate && g.status === "ready";
   return (
     <article className="paper game-detail">
       <span className="eyebrow">
@@ -98,7 +98,7 @@ export function GameDetail({
             ? "12月" +
               Number(g.releaseDate.slice(-2)) +
               "日 0時（日本時間）に公開します。"
-            : "開発中です。完成までお楽しみに。"}
+            : "準備中です。完成までお楽しみに。"}
         </div>
       )}
       <Link prefetch={false} className="backlink" href={url(ctx)}>

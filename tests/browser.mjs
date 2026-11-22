@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { chromium, devices } from "playwright";
 import { neighbors } from "../lib/slide.ts";
 import path from "node:path";
@@ -219,8 +220,8 @@ try {
     });
     assert.ok(headingFits, name + " title fits inside the frame");
     await p.getByRole("link", { name: "今日のプレゼントを開ける" }).click();
-    await p.getByRole("heading", { name: "4人のクリスマス会" }).waitFor();
-    await p.locator(".body-text").evaluate(el => {el.textContent = "雪の夜、ふたりは窓辺に並んで座りました。".repeat(80)});
+    await p.getByRole("heading", { name: "クリスマスパーティー" }).waitFor();
+    await p.getByText("準備中です。", { exact: true }).waitFor();
     assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     await p.waitForFunction(() =>
       JSON.parse(
@@ -229,16 +230,49 @@ try {
     );
     await p.getByRole("link", { name: "カレンダーにもどる" }).click();
     await p.locator(".door.opened").first().waitFor();
-    await p.goto(url("/calendar/2"));
-    await p.getByRole("button", { name: /てぶくろ/ }).click();
-    await p.getByRole("status").filter({ hasText: "不正解" }).waitFor();
-    await p.getByRole("button", { name: /くつ下/ }).click();
-    await p.getByRole("status").filter({ hasText: "正解！" }).waitFor();
+    for (const day of [2,5,8,11,14,16,19,22,7,12,18,23]) {
+      await p.goto(url("/calendar/" + day));
+      const art = p.locator(".book-zoom img");
+      await art.evaluate(el => el.decode());
+      await p.locator(".book-zoom").click();
+      const full = p.getByRole("dialog");
+      await full.waitFor();
+      assert.equal(await full.locator("img").getAttribute("src"), await art.getAttribute("src"));
+      await full.getByRole("button", { name: "閉じる" }).click();
+      await full.waitFor({ state: "hidden" });
+      assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    }
+    for (const [day, correct] of [[4,0],[9,1],[15,2],[21,1]]) {
+      const quiz = JSON.parse(await readFile("content/days/" + String(day).padStart(2,"0") + ".json","utf8"));
+      await p.goto(url("/calendar/" + day));
+      await p.getByText(quiz.question,{exact:true}).waitFor();
+      const buttons = p.locator(".choices button");
+      assert.equal(await buttons.count(),3);
+      for (const index of [(correct + 1) % 3,correct]) {
+        assert.ok((await buttons.nth(index).boundingBox()).height >= 44);
+        await buttons.nth(index).click();
+        const result = p.locator(".answer");
+        const message = index === correct ? quiz.correct : quiz.incorrect;
+        await result.locator(".speech." + quiz.who).getByText(message,{exact:true}).waitFor();
+        await result.getByText(quiz.explanation,{exact:true}).waitFor();
+        assert.equal(await buttons.nth(correct).getAttribute("class"),"correct");
+        assert.equal(await p.locator(".choices button:disabled").count(),3);
+        await p.reload();
+        await result.getByText(message,{exact:true}).waitFor();
+        if (index !== correct) {
+          await result.getByRole("button",{name:"もう一度"}).click();
+          await p.reload();
+          assert.equal(await p.locator(".choices button:enabled").count(),3);
+        }
+      }
+    }
     await p.goto(url("/calendar/1"));
     assert.equal(await p.locator("figure").count(), 2);
-    const download = p.waitForEvent("download");
-    await p.getByText("画像を保存").first().click();
-    assert.equal((await download).suggestedFilename(), "wall-desktop.png");
+    for (const [i,file] of ["december.png","winter-night.png"].entries()) {
+      const download = p.waitForEvent("download");
+      await p.getByText("画像を保存").nth(i).click();
+      assert.equal((await download).suggestedFilename(), file);
+    }
     for (const [id, fn] of [
       ["memory", memory],
       ["slide", (page) => slide(page, 3)],
@@ -252,10 +286,20 @@ try {
     }
     await p.getByRole("link", { name: "お部屋にもどる", exact: true }).click();
     await p.locator(".room-scene").waitFor();
+    await p.getByText(/わあ、ツリーが光った/).waitFor();
+    await p.getByRole("button",{name:"次のメッセージ"}).click();
+    await p.getByText(/リースも飾れたね/).waitFor();
     await p.reload();
+    await p.getByText(/プレゼントも並んだね/).waitFor();
+    await p.reload();
+    assert.equal(await p.locator(".reward-notice").count(), 0);
     for (const selector of [".lights", ".wreath", ".new-present"])
       await p.locator(selector).waitFor();
     await p.locator("summary").click();
+    for (const [game,selector] of [["プレゼント仕分け",".room-cake"],["プレゼント配達",".window-lights"]]) {
+      await p.getByRole("checkbox",{name:game}).check();
+      await p.locator(selector).waitFor();
+    }
     await p.getByRole("button", { name: "プレビュー記録をリセット" }).click();
     assert.equal(
       await p.locator(".wreath,.lights,.new-present,.door.opened").count(),
@@ -263,7 +307,19 @@ try {
     );
     await ctx.close();
   }
+  const legacy = await browser.newPage();
+  await legacy.goto(url());
+  await legacy.evaluate(() => localStorage.setItem("noct-lux:christmas-2026:v1:preview",JSON.stringify({opened:[1,7],clears:["memory"],slideBest:{"3":5}})));
+  await legacy.reload();
+  await legacy.locator(".lights").waitFor();
+  assert.equal(await legacy.locator(".reward-notice").count(),0);
+  assert.equal(await legacy.locator(".door.opened").count(),2);
+  await legacy.goto(url("/games/slide"));
+  await legacy.getByRole("button",{name:"試遊する"}).click();
+  assert.match(await legacy.locator(".game-stat").innerText(), /ベスト記録 5 手/);
+  await legacy.close();
   for (const [date, count] of [
+    ["2026-11-29", 0],
     ["2026-11-30", 0],
     ["2026-12-01", 1],
     ["2026-12-06", 6],
@@ -282,11 +338,11 @@ try {
   for(let day=1;day<=25;day++){
     await p.goto(url("/calendar/"+day));
     await p.locator(".content-card h1").waitFor();
-    assert.ok(await p.locator(".content-card img").evaluateAll(imgs => imgs.every(img => img.complete && img.naturalWidth>0)));
+    assert.ok(await p.locator(".content-card img").evaluateAll(async imgs => {await Promise.all(imgs.map(img => img.decode()));return imgs.every(img => img.naturalWidth>0)}));
   }
-  await p.goto(url("/games/jigsaw","2026-12-19"));
+  await p.goto(url("/games/jigsaw","2026-12-12"));
   assert.equal(await p.getByRole("button",{name:"試遊する"}).count(),0);
-  await p.locator("summary").click();await p.locator('input[type="date"]').fill("2026-12-20");
+  await p.locator("summary").click();await p.locator('input[type="date"]').fill("2026-12-13");
   await p.getByRole("button",{name:"日付を適用"}).click();await p.getByRole("button",{name:"試遊する"}).waitFor();
   await p.close();
   console.log("Dates, downloads, progress, touch controls: OK");

@@ -1,8 +1,18 @@
 "use client";
 import { useSyncExternalStore } from "react";
 import type { GameId } from "./types";
-type RecordState = { opened: number[]; clears: GameId[]; slideBest: Partial<Record<number, number>> };
-const empty: RecordState = { opened: [], clears: [], slideBest: {} };
+import games from "@/content/games.json";
+const validGame = (id: unknown): id is GameId => games.some(g => g.id === id);
+type QuizRecord = { attempts: number[]; lastChoice: number | null };
+function isChoice(value: unknown): value is number {
+  return value === 0 || value === 1 || value === 2;
+}
+function readQuizzes(raw: Record<string, QuizRecord> = {}) {
+  return Object.fromEntries(Object.entries(raw ?? {}).filter(([, q]) =>
+    Array.isArray(q?.attempts) && q.attempts.every(isChoice) && (q.lastChoice === null || isChoice(q.lastChoice))));
+}
+type RecordState = { pendingRewards: GameId[]; quizAnswers: Record<string, QuizRecord>; opened: number[]; clears: GameId[]; slideBest: Partial<Record<number, number>> };
+const empty: RecordState = { pendingRewards: [], quizAnswers: {}, opened: [], clears: [], slideBest: {} };
 const cache = new Map<string, RecordState>(),
   last = new Map<string, string | null>(),
   volatile = new Set<string>();
@@ -26,6 +36,8 @@ function read(key: string): RecordState {
       try {
         const p = JSON.parse(raw);
         value = {
+          pendingRewards: Array.isArray(p?.pendingRewards) ? p.pendingRewards.filter(validGame) : [],
+          quizAnswers: readQuizzes(p?.quizAnswers),
           slideBest: Object.fromEntries(
             [3, 4].filter(n => Number.isSafeInteger(p?.slideBest?.[n]) && p.slideBest[n] > 0)
               .map(n => [n, p.slideBest[n]]),
@@ -37,7 +49,7 @@ function read(key: string): RecordState {
             : [],
           clears: Array.isArray(p?.clears)
             ? p.clears.filter((g: string) =>
-                ["memory", "slide", "jigsaw"].includes(g),
+                validGame(g),
               )
             : [],
         };
@@ -83,6 +95,9 @@ export function useProgress(preview: boolean) {
   function clear(game: GameId, yes = true) {
     change((p) => ({
       ...p,
+      pendingRewards: yes
+        ? p.clears.includes(game) ? p.pendingRewards : [...p.pendingRewards, game]
+        : p.pendingRewards.filter(id => id !== game),
       clears: yes
         ? Array.from(new Set([...p.clears, game]))
         : p.clears.filter((g) => g !== game),
@@ -94,5 +109,20 @@ export function useProgress(preview: boolean) {
       slideBest: { ...p.slideBest, [size]: Math.min(moves, p.slideBest[size] ?? moves) },
     }));
   }
-  return { state, opened, clear, recordSlideBest, reset: () => change(() => empty) };
+  function readReward(id: GameId) {
+    change(p => ({ ...p, pendingRewards: p.pendingRewards.filter(g => g !== id) }));
+  }
+  function answer(id: string, choice: number) {
+    change(p => {
+      const quiz = p.quizAnswers[id];
+      if (quiz?.lastChoice != null || !isChoice(choice)) return p;
+      return { ...p, quizAnswers: { ...p.quizAnswers, [id]: {
+        attempts: [...(quiz?.attempts ?? []), choice], lastChoice: choice,
+      } } };
+    });
+  }
+  function retryQuiz(id: string) {
+    change(p => ({ ...p, quizAnswers: { ...p.quizAnswers, [id]: { ...p.quizAnswers[id], lastChoice: null } } }));
+  }
+  return { state, opened, clear, readReward, answer, retryQuiz, recordSlideBest, reset: () => change(() => empty) };
 }

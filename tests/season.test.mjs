@@ -4,7 +4,7 @@ import { readFile, access } from "node:fs/promises";
 import { tokyoDate, validDate, season, nextMidnight } from "../lib/season.ts";
 import { neighbors, shuffle, solved } from "../lib/slide.ts";
 test("日本時間の0時に切り替わり、開催前・25日・終了後・翌年を区別する", () => {
-  for (const day of [1, 6, 13, 20, 25, 26]) {
+  for (const day of [1, 3, 10, 13, 17, 20, 25, 26]) {
     const expected = "2026-12-" + String(day).padStart(2, "0"),
       t = Date.parse(expected + "T00:00:00+09:00");
     assert.equal(tokyoDate(t), expected);
@@ -49,7 +49,7 @@ test("25日分の登録、画像、クイズ、ゲーム日付を検証", async 
       assert.ok(d.explanation);
     }
   }
-  assert.equal(days.size, 7);
+  assert.deepEqual([...days].sort(), ["game","illustration","quiz","special","story","wallpaper"]);
 });
 test("スライドのシャッフルは合法な移動を使い、未完成・重複なし", () => {
   for (const n of [3, 4])
@@ -59,4 +59,24 @@ test("スライドのシャッフルは合法な移動を使い、未完成・�
       assert.ok(!solved(a));
       assert.deepEqual(neighbors(0, n), [n, 1]);
     }
+});
+
+test("確定日程のシリーズ・話数・ゲーム・クイズを照合する", async () => {
+  const expected = [
+    "wallpaper", "lux1", "memory", "stocking", "lux2", "special", "gallery1", "lux3", "nicholas",
+    "slide", "lux4", "gallery2", "jigsaw", "noct1", "antlers", "noct2", "sorting",
+    "gallery3", "noct3", "delivery", "holly", "noct4", "gallery4", "special", "special",
+  ];
+  for (const [index, key] of expected.entries()) {
+    const day = JSON.parse(await readFile("content/days/" + String(index + 1).padStart(2, "0") + ".json", "utf8"));
+    assert.equal(day.series ? day.series + day.episode : day.gameId ?? day.id ?? day.kind, key);
+    if (day.series) {
+      assert.equal(day.paragraphs.length, day.day === 23 ? 4 : 3);
+      assert.doesNotMatch([day.title, day.image.alt, ...day.paragraphs].join(" "), /マフラー/);
+    }
+    if (day.kind === "quiz") {
+      assert.ok(day.correct && day.incorrect && day.explanation);
+      assert.equal(day.who, [4, 15].includes(day.day) ? "lux" : "noct");
+    }
+  }
 });
