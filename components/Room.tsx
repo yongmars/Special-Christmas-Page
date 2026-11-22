@@ -1,4 +1,5 @@
 import { Character } from "./Character";
+import { publicPath } from "@/lib/public-path";
 import { Icon } from "./Icon";
 
 export function Room({ decorations }: { decorations: string[] }) {
@@ -10,7 +11,7 @@ export function Room({ decorations }: { decorations: string[] }) {
     >
       <img
         className="room-bg"
-        src="/images/christmas/room.svg"
+        src={publicPath("/images/christmas/room.svg")}
         alt="暖炉とクリスマスツリーのあるお部屋"
       />
       <div className="cat noct">

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
 import { Icon } from "./Icon";
 import { Context, url } from "@/lib/types";
 import { season } from "@/lib/season";

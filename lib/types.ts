@@ -1,3 +1,4 @@
+import { mount, publicPath } from "./public-path";
 export type Who = "noct" | "lux";
 export type GameId = "memory" | "slide" | "jigsaw";
 export type Kind =
@@ -63,9 +64,10 @@ export const kindNames: Record<Kind, string> = {
 export function url(ctx: Pick<Context, "preview" | "date">, path = "/") {
   return ctx.preview
     ? "/dev/preview" + (path === "/" ? "" : path) + "?date=" + ctx.date
-    : path;
+    : publicPath(mount && path !== "/" ? path + "/" : path);
 }
 export function asset(ctx: Context, day: number, file: string) {
+  if (mount) return publicPath("/art/" + String(day).padStart(2, "0") + "/" + encodeURIComponent(file));
   return (
     "/art/" +
     day +

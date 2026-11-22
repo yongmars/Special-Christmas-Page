@@ -5,3 +5,4 @@ preview*.log
 next-env.d.ts
 .vercel/
 .reference-local/
+dist-pages/

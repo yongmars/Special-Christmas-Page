@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
 import { useState } from "react";
 import { asset, Context, Game, GameId, url } from "@/lib/types";
 import { Heading } from "./Calendar";

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
 import { useState } from "react";
 import { Context, Day, Game, Line, asset, kindNames, url } from "@/lib/types";
 import chars from "@/content/characters.json";

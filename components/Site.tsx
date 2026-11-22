@@ -1,7 +1,7 @@
 "use client";
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import { nextMidnight, season } from "@/lib/season";
 import { useProgress } from "@/lib/progress";
 import { Context, Day, Game, url } from "@/lib/types";
