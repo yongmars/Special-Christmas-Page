@@ -83,7 +83,7 @@ export function GameDetail({
               <Slide image={image(g.image!)} onWin={() => onClear(g.id)} />
             )}
             {g.id === "jigsaw" && (
-              <Trial image={image(g.image!)} onWin={() => onClear(g.id)} />
+              <Trial image={image(g.image!)} illustrationTitle={g.illustrationTitle ?? g.title} onWin={() => onClear(g.id)} />
             )}
           </>
         ) : (

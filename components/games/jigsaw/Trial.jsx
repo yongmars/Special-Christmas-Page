@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { shufflePieces } from "./geometry.mjs";
 import PuzzleSurface from "./PuzzleSurface";
 import "./jigsaw.css";
-export default function Trial({ image, onWin }) {
+export default function Trial({ image, illustrationTitle, onWin }) {
   const [pieces, set] = useState([]),
     [guide, setGuide] = useState(true);
   const win = pieces.length > 0 && pieces.every((p) => p.placed);
@@ -23,7 +23,7 @@ export default function Trial({ image, onWin }) {
     <div className="jg-app trial">
       <p>ドラッグではめる　·　タップで90度回転</p>
       <PuzzleSurface
-        config={{ size: 3, image, illustrationTitle: "雪のクリスマス" }}
+        config={{ size: 3, image, illustrationTitle }}
         pieces={pieces}
         setPieces={set}
         guide={guide}

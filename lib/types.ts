@@ -36,6 +36,7 @@ export type Game = {
   decoration: { id: string; label: string };
   intro: string;
   image?: string;
+  illustrationTitle?: string;
   faces?: Face[];
   backFile?: string;
 };

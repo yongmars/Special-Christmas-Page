@@ -82,7 +82,7 @@ if (process.argv[2] === "serve") {
     await p.goto(base);
     assert.equal(await p.locator("a.door").count(), 25);
     assert.equal(
-      (await get("/art/20/winter.svg?preview=2027-01-01")).status,
+      (await get("/art/20/christmas-market.webp?preview=2027-01-01")).status,
       404,
     );
     await p.goto(base + "/calendar/9");
