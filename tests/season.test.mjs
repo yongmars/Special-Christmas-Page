@@ -33,6 +33,7 @@ test("25日分の登録、画像、クイズ、ゲーム日付を検証", async 
       .filter(Boolean)
       .map((a) => a.file);
     if (g?.image) files.push(g.image);
+    if (g?.backFile) files.push(g.backFile);
     for (const file of files)
       await access("assets/christmas/" + key + "/" + file);
     if (d.kind === "quiz") {

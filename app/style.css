@@ -814,9 +814,13 @@ footer > a {
   padding: 3px;
 }
 .memory-board button {
-  background: #315549;
+  aspect-ratio: 3 / 4;
+  grid-template-rows: minmax(0, 1fr);
+  padding: 0;
+  background: #4e1815;
   color: #e2be7c;
-  border: 3px double #bda573;
+  border: 1px solid #bda573;
+  overflow: hidden;
   font-size: 32px;
 }
 .memory-board .flipped {
