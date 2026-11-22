@@ -34,6 +34,13 @@ test("25日分の登録、画像、クイズ、ゲーム日付を検証", async 
       .map((a) => a.file);
     if (g?.image) files.push(g.image);
     if (g?.backFile) files.push(g.backFile);
+    if (g?.id === "memory") {
+      const fronts = g.faces.map((face) => face.file);
+      assert.equal(fronts.length, 8);
+      assert.equal(new Set(fronts).size, 8);
+      assert.ok(fronts.every((file) => file && file !== g.backFile));
+      files.push(...fronts);
+    }
     for (const file of files)
       await access("assets/christmas/" + key + "/" + file);
     if (d.kind === "quiz") {

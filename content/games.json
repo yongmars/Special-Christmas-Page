@@ -12,44 +12,44 @@
     "intro": "同じ絵柄のカードを2枚ずつ見つけよう。",
     "faces": [
       {
-        "name": "星",
-        "symbol": "★",
-        "file": ""
+        "name": "ノクト",
+        "symbol": "🐈‍⬛",
+        "file": "noct.webp"
       },
       {
-        "name": "ベル",
-        "symbol": "♬",
-        "file": ""
+        "name": "ルクス",
+        "symbol": "🐱",
+        "file": "lux.webp"
       },
       {
-        "name": "ツリー",
-        "symbol": "♠",
-        "file": ""
+        "name": "朔獣人型",
+        "symbol": "🌙",
+        "file": "saku-beast.webp"
       },
       {
-        "name": "雪",
-        "symbol": "❄",
-        "file": ""
+        "name": "ゆうまるす",
+        "symbol": "🎁",
+        "file": "yongmars.webp"
       },
       {
-        "name": "くつ下",
-        "symbol": "🧦",
-        "file": ""
+        "name": "朔人型",
+        "symbol": "🎄",
+        "file": "saku.webp"
       },
       {
-        "name": "キャンドル",
-        "symbol": "🕯",
-        "file": ""
+        "name": "ノクト人型",
+        "symbol": "🎩",
+        "file": "noct-human.webp"
       },
       {
-        "name": "リボン",
-        "symbol": "🎀",
-        "file": ""
+        "name": "ルクス人型",
+        "symbol": "🍰",
+        "file": "lux-human.webp"
       },
       {
-        "name": "おうち",
-        "symbol": "⌂",
-        "file": ""
+        "name": "朔猫",
+        "symbol": "🦌",
+        "file": "saku-cat.webp"
       }
     ],
     "backFile": "card-back.webp"
