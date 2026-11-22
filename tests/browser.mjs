@@ -45,28 +45,50 @@ async function memory(page) {
     cards = board.getByRole("button");
   await cards.first().waitFor();
   const pairs = new Map();
+  const preview = page.getByRole("dialog");
+  let previews = 0;
+  async function checkPreview(name) {
+    await preview.waitFor();
+    assert.equal(await preview.getAttribute("aria-label"), name + "のペアがそろったよ！");
+    const art = preview.getByRole("img", { name, exact: true });
+    await art.evaluate((img) => img.decode());
+    assert.ok((await art.boundingBox()).width > (await cards.first().boundingBox()).width);
+    assert.ok(await cards.evaluateAll((buttons) => buttons.every((b) => b.disabled)));
+    assert.doesNotMatch(await page.locator(".game-stat").innerText(), /すべて/);
+    previews++;
+    if (previews === 1) {
+      await preview.waitFor({ state: "hidden", timeout: 3500 });
+    } else if (previews === 2) {
+      await page.keyboard.press("Escape");
+    } else if (previews % 2 === 0) {
+      await art.click();
+    } else {
+      await preview.getByRole("button").click();
+    }
+    await page.locator(".memory-preview").waitFor({ state: "detached" });
+  }
   for (let i = 0; i < 16; i += 2) {
+    const names = [];
     for (const j of [i, i + 1]) {
       await cards.nth(j).click();
       const name = await cards.nth(j).getAttribute("aria-label");
+      names.push(name);
       pairs.set(name, [...(pairs.get(name) || []), j]);
     }
-    await page.waitForFunction(
-      () =>
-        document.querySelectorAll(".memory-board .flipped:not(:disabled)")
-          .length === 0,
-    );
-    if (i < 14) await cards.nth(i + 2).waitFor({ state: "visible" });
-    await page.waitForTimeout(800);
+    if (names[0] === names[1]) await checkPreview(names[0]);
+    else await page.waitForFunction((index) =>
+      !document.querySelectorAll(".memory-board button")[index].disabled, i);
   }
   assert.equal(pairs.size, 8);
-  for (const [a, b] of pairs.values()) {
+  for (const [name, [a, b]] of pairs) {
     if (!(await cards.nth(a).isDisabled())) {
       await cards.nth(a).click();
       await cards.nth(b).click();
+      await checkPreview(name);
     }
   }
   assert.match(await page.locator(".game-stat").innerText(), /すべて/);
+  assert.equal(previews, 8);
 }
 async function slide(page, n) {
   await page.getByRole("combobox").last().selectOption(String(n));

@@ -832,6 +832,37 @@ footer > a {
   height: 100%;
   object-fit: contain;
 }
+html:has(.memory-preview[open]) {
+  overflow: hidden;
+}
+.memory-preview {
+  width: min(88vw, 540px, calc((100dvh - 90px) * 0.75));
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff2d4;
+  text-align: center;
+}
+.memory-preview::backdrop {
+  background: #0a1022e8;
+}
+.memory-preview img,
+.memory-preview span {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: contain;
+  font-size: 5rem;
+}
+.memory-preview button {
+  margin: 10px 0 4px;
+  min-height: 44px;
+  border: 1px solid #dabb80;
+  border-radius: 24px;
+  background: #193c34;
+}
 .slide-board {
   background: #334b42;
   padding: 6px;
