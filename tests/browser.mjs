@@ -146,7 +146,11 @@ async function jigsaw(page, touch) {
         "piece " + i,
       );
   }
-  await page.getByRole("status").filter({ hasText: "かんせい！" }).waitFor();
+  await page.getByRole("heading", {name:"かんせい！できたね！"}).waitFor();
+  await page.locator(".jg-finished-art").waitFor();
+  assert.equal(await page.locator(".jg-surface").count(), 0);
+  await page.getByRole("button", {name:"もう一度あそぶ"}).click();
+  await page.locator(".jg-piece.loose").first().waitFor();
 }
 try {
   for (const [name, opts] of [

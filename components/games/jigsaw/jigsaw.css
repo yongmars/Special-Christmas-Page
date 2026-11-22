@@ -84,11 +84,23 @@
 .jg-cover img { width: 100%; border: 7px solid #385b47; border-radius: 8px; }
 .jg-success { margin-top: 15px; position: relative; overflow: hidden; padding: 18px; text-align: center; border: 1px solid #d7bf87; border-radius: 10px; background: #fff8e6; }
 .jg-success h2 { margin: 0 0 12px; font: bold 30px/1.4 "Yu Mincho", serif; color: var(--red); }
-.jg-success > div:last-child { position: relative; display: flex; justify-content: center; gap: 10px; }
+.jg-finished-art {
+  display: block;
+  width: min(100%, 78svh);
+  height: auto;
+  margin: 0 auto;
+  border: 4px solid #e2c78d;
+  border-radius: 6px;
+  box-shadow: 0 3px 12px #47362226;
+}
+.jg-finished-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+@media (max-width: 760px) {
+  .jg-success { padding: 12px 6px; }
+  .jg-success h2 { font-size: clamp(21px, 6vw, 30px); }
+}
 .jg-success .jg-back { border-color: #c2b79c; }
-.jg-sparkles { position: absolute; inset: 0; pointer-events: none; }
-.jg-sparkles i { position: absolute; left: calc(3% + var(--i)*8.2%); top: calc(7% + mod(var(--i)*31,74)*1%); color: #bc8b32; animation: jg-twinkle 1.2s ease-in-out calc(var(--i)*-.13s) 3 alternate; }
-@keyframes jg-twinkle { from { opacity: .1; transform: scale(.5) rotate(-20deg); } to { opacity: 1; transform: scale(1.1) rotate(15deg); } }
+.jg-finished-art { animation: jg-reveal .3s ease-out; }
+@keyframes jg-reveal { from { opacity: .7; } to { opacity: 1; } }
 .jg-sr { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
 @media (max-width: 760px) {
   .jg-top-inner, .jg-main { width: calc(100% - 28px); }

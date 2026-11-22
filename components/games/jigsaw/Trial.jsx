@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { shufflePieces } from "./geometry.mjs";
 import PuzzleSurface from "./PuzzleSurface";
+import CompletedPicture from "./CompletedPicture";
 import "./jigsaw.css";
 export default function Trial({ image, illustrationTitle, onWin }) {
   const [pieces, set] = useState([]),
@@ -19,8 +20,10 @@ export default function Trial({ image, illustrationTitle, onWin }) {
       onWin();
     }
   }, [win, onWin]);
+  const replay = <button onClick={() => set(shufflePieces(3))}>もう一度あそぶ</button>;
   return (
     <div className="jg-app trial">
+      {win ? <CompletedPicture image={image} title={illustrationTitle}>{replay}</CompletedPicture> : <>
       <p>ドラッグではめる　·　タップで90度回転</p>
       <PuzzleSurface
         config={{ size: 3, image, illustrationTitle }}
@@ -28,15 +31,15 @@ export default function Trial({ image, illustrationTitle, onWin }) {
         setPieces={set}
         guide={guide}
         hint={null}
-        completed={win}
+        completed={false}
       />
       <div className="game-actions">
         <button onClick={() => setGuide(!guide)} aria-pressed={guide}>
           完成見本 {guide ? "オン" : "オフ"}
         </button>
-        <button onClick={() => set(shufflePieces(3))}>もう一度あそぶ</button>
+        {replay}
       </div>
-      {win && <h2 role="status">かんせい！</h2>}
+      </>}
     </div>
   );
 }
