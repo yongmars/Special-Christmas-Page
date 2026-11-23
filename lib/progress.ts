@@ -2,6 +2,7 @@
 import { useSyncExternalStore } from "react";
 import type { GameId } from "./types";
 import games from "@/content/games.json";
+import { readCheckpoint, type Checkpoint } from "./delivery-run";
 const validGame = (id: unknown): id is GameId => games.some(g => g.id === id);
 type QuizRecord = { attempts: number[]; lastChoice: number | null };
 function isChoice(value: unknown): value is number {
@@ -11,7 +12,7 @@ function readQuizzes(raw: Record<string, QuizRecord> = {}) {
   return Object.fromEntries(Object.entries(raw ?? {}).filter(([, q]) =>
     Array.isArray(q?.attempts) && q.attempts.every(isChoice) && (q.lastChoice === null || isChoice(q.lastChoice))));
 }
-type RecordState = { pendingRewards: GameId[]; quizAnswers: Record<string, QuizRecord>; opened: number[]; clears: GameId[]; slideBest: Partial<Record<number, number>> };
+type RecordState = { deliveryV1?: Checkpoint; pendingRewards: GameId[]; quizAnswers: Record<string, QuizRecord>; opened: number[]; clears: GameId[]; slideBest: Partial<Record<number, number>> };
 const empty: RecordState = { pendingRewards: [], quizAnswers: {}, opened: [], clears: [], slideBest: {} };
 const cache = new Map<string, RecordState>(),
   last = new Map<string, string | null>(),
@@ -36,6 +37,7 @@ function read(key: string): RecordState {
       try {
         const p = JSON.parse(raw);
         value = {
+          deliveryV1: readCheckpoint(p?.deliveryV1),
           pendingRewards: Array.isArray(p?.pendingRewards) ? p.pendingRewards.filter(validGame) : [],
           quizAnswers: readQuizzes(p?.quizAnswers),
           slideBest: Object.fromEntries(
@@ -124,5 +126,8 @@ export function useProgress(preview: boolean) {
   function retryQuiz(id: string) {
     change(p => ({ ...p, quizAnswers: { ...p.quizAnswers, [id]: { ...p.quizAnswers[id], lastChoice: null } } }));
   }
-  return { state, opened, clear, readReward, answer, retryQuiz, recordSlideBest, reset: () => change(() => empty) };
+  function saveDelivery(deliveryV1: Checkpoint) {
+    change(p => ({ ...p, deliveryV1 }));
+  }
+  return { state, opened, clear, readReward, answer, retryQuiz, recordSlideBest, saveDelivery, reset: () => change(() => empty) };
 }

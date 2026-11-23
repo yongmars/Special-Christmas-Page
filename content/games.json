@@ -122,7 +122,7 @@
     "id": "delivery",
     "title": "プレゼント配達",
     "href": "/games/delivery",
-    "status": "pending",
+    "status": "ready",
     "decoration": {
       "label": "窓の外の家々の明かり",
       "id": "village-lights",
@@ -137,7 +137,7 @@
         }
       ]
     },
-    "intro": "みんなの家にプレゼントを届けるゲームです。",
+    "intro": "一度通った道は使えないよ。ソリで雪の町を巡り、プレゼントを順番どおりに届けよう。",
     "releaseDate": "2026-12-21"
   }
 ]
