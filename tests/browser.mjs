@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { chromium, devices } from "playwright";
 import { neighbors } from "../lib/slide.ts";
+import { playSorting } from "./play-sorting.mjs";
 import path from "node:path";
 import os from "node:os";
 const base = process.env.SITE_URL || "http://127.0.0.1:3016",
@@ -306,10 +307,16 @@ try {
     assert.equal(await reward.count(), 0);
     for (const selector of [".lights", ".wreath", ".new-present"])
       await p.locator(selector).waitFor();
-    await p.locator("summary").click();
-    await p.getByRole("checkbox",{name:"プレゼント仕分け"}).check();
+    await p.goto(url("/calendar/13", "2026-12-13"));
+    await p.getByRole("link", { name: "ゲームの入口へ" }).click();
+    await p.getByRole("button", { name: "試遊する" }).click();
+    await playSorting(p, name !== "desktop");
+    await p.getByRole("button", { name: "もう一度あそぶ" }).click();
+    assert.equal(await p.locator("progress").getAttribute("value"), "0");
+    await p.getByRole("link", { name: "お部屋に戻る", exact: true }).click();
     await checkReward("sorting", "lux", "ケーキだ！ ねえ、ちょっと味見しちゃダメ？", ".room-cake", "cake");
     await reward.getByRole("button").click();
+    await p.locator("summary").click();
     await p.getByRole("checkbox",{name:"プレゼント配達"}).check();
     await checkReward("delivery", "noct", "みんなにプレゼントも届いたし……", ".window-lights", "village-lights");
     await reward.getByRole("button").click();

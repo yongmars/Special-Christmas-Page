@@ -5,6 +5,7 @@ import { Heading } from "./Calendar";
 import { Icon } from "./Icon";
 import { Memory } from "./games/Memory";
 import { Slide } from "./games/Slide";
+import { Sorting } from "./games/sorting/Sorting";
 import Trial from "./games/jigsaw/Trial";
 const symbols = { memory: "card", slide: "grid", jigsaw: "puzzle", sorting: "gift", delivery: "gift" };
 export function Games({ ctx, games }: { ctx: Context; games: Game[] }) {
@@ -59,6 +60,9 @@ export function GameDetail({
   const image = (f: string) => asset(ctx, day, f);
   const active =
     ctx.date >= g.releaseDate && g.status === "ready";
+  if (g.id === "sorting" && active) {
+    return <Sorting ctx={ctx} game={g} onWin={() => onClear(g.id)} />;
+  }
   return (
     <article className="paper game-detail">
       <span className="eyebrow">

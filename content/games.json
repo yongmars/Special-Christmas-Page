@@ -102,9 +102,9 @@
   },
   {
     "id": "sorting",
-    "title": "プレゼント仕分け",
+    "title": "サンタのお手伝い！プレゼント仕分けゲーム",
     "href": "/games/sorting",
-    "status": "pending",
+    "status": "ready",
     "decoration": {
       "label": "クリスマスショートケーキ",
       "id": "cake",
@@ -115,7 +115,7 @@
         }
       ]
     },
-    "intro": "クリスマスの贈り物を仕分けるゲームです。",
+    "intro": "流れてきた品物と同じ種類の箱をタップしよう。15個包めばお手伝い完了！",
     "releaseDate": "2026-12-13"
   },
   {

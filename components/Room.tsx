@@ -58,6 +58,12 @@ export function Room({ decorations, arriving }: { decorations: string[]; arrivin
           <path d="M-81 -6v24c1 19 160 19 162 0V-6" fill="#e4b37f" stroke="#955f41" strokeWidth="2"/>
           <path d="M-81 1Q0 26 81 1v8Q0 35 -81 9Z" fill="#fbebe0"/><ellipse cy="-7" rx="82" ry="19" fill="#fff5dd" stroke="#d0a880" strokeWidth="2"/>
           {[-58,-31,0,31,58].map((x,i)=><g transform={"translate("+x+" "+(i%2?-17:-9)+")"} key={x}><path d="M-12 -5Q-11 -23 0 -18Q14 -24 13 -5Q5 13 -1 12Q-10 7 -12 -5" fill="#ce4134" stroke="#a53529"/><path d="m0 -16 -9 -7 7 1 2 -6 2 6 8 -2 -6 7Z" fill="#507448"/><path d="m-6 -8 -1 3m10 -4 -1 3m-3 3 -1 3" stroke="#ffe18e" strokeWidth="2"/></g>)}
+          <g transform="translate(3 -7) rotate(-5)">
+            <rect x="-25" y="-7" width="56" height="15" rx="5" fill="#643c2f" stroke="#cfac76" />
+            <text x="3" y="3" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="9" fill="#fff1cc">Noël</text>
+            <path d="M23 -7q-7 -3 -9 -16l6 3 1 -5 4 8 4 -4 -2 13M24 -7q6 -12 17 -12l-2 5 5 1 -7 4 3 2 -14 4Z" fill="#3b6547" stroke="#284a34" />
+            <circle cx="24" cy="-7" r="3" fill="#b83428"/><circle cx="28" cy="-5" r="3" fill="#df4f39"/>
+          </g>
         </g>}
       </svg>
       <div className="cat noct"><Character who="noct" mirrored /></div>

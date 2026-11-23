@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="900" height="300" viewBox="0 0 900 300">
+  <defs>
+    <linearGradient id="wall" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#24483e"/><stop offset=".65" stop-color="#406353"/><stop offset="1" stop-color="#345448"/>
+    </linearGradient>
+    <linearGradient id="wood" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#af7951"/><stop offset=".15" stop-color="#896246"/><stop offset="1" stop-color="#674737"/>
+    </linearGradient>
+    <linearGradient id="sky" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#315260"/><stop offset=".55" stop-color="#688786"/><stop offset="1" stop-color="#d1d3b7"/>
+    </linearGradient>
+    <radialGradient id="halo">
+      <stop stop-color="#ffdf8e" stop-opacity=".62"/><stop offset=".36" stop-color="#f7cf7a" stop-opacity=".22"/><stop offset="1" stop-color="#ffd79a" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="boards" width="46" height="300" patternUnits="userSpaceOnUse">
+      <path d="M0 0v300" stroke="#193e36" stroke-width="3" opacity=".45"/>
+      <path d="M2 0v300" stroke="#82927a" opacity=".25"/>
+      <path d="M18 40c5 58-5 101-1 147m14-75q-3 25-2 71" fill="none" stroke="#214e41" opacity=".2"/>
+    </pattern>
+    <g id="fir">
+      <path d="M0 0-7 14l4-1-10 15 8-3-13 16 17-4 15 4-10-15 6 2-9-15 4 1z" fill="#42675f"/>
+      <path d="m0 0-7 14 6-3-11 17 9-5-13 17 16-10z" fill="#a8c4b9"/>
+    </g>
+    <g id="lit-window">
+      <path d="M-64 101V22c0-43 126-43 126 0v79z" fill="#294039" transform="translate(0 4)"/>
+      <path d="M-64 101V18c0-42 126-42 126 0v83z" fill="url(#wood)" stroke="#513b30" stroke-width="3"/>
+      <path d="M-55 95V20c0-32 107-32 107 0v75z" fill="url(#sky)" stroke="#dbab79" stroke-width="2"/>
+      <g fill="#e9e7c6">
+        <circle cx="-34" cy="17" r="1.8"/><circle cx="-15" cy="28" r="1.2"/><circle cx="9" cy="11" r="1.2"/><circle cx="45" cy="39" r="1.5"/><circle cx="18" cy="36" r="1.1"/><circle cx="-40" cy="43" r="1"/>
+      </g>
+      <path d="M-54 75q24-12 44-6 27 2 61-18v43H-54z" fill="#bccbb9"/>
+      <use xlink:href="#fir" transform="translate(-31 37) scale(.92)"/>
+      <use xlink:href="#fir" transform="translate(33 44) scale(.72)"/>
+      <use xlink:href="#fir" transform="translate(15 60) scale(.47)"/>
+      <path d="M-54 80q22-13 49-3 25 6 56-4v22H-54z" fill="#e3debf"/>
+      <path d="M-3-5h5V98h-5zM-54 40H52v5H-54z" fill="#896044" stroke="#513c30" stroke-width="1.5"/>
+      <path d="M-67 98H64v8H-67z" fill="url(#wood)" stroke="#594232" stroke-width="2"/>
+      <path d="M-65 99h127" stroke="#d9a676" stroke-width="2"/>
+    </g>
+    <g id="gift" stroke="#543e32" stroke-width="1.2" stroke-linejoin="round">
+      <path d="m0 5 24-6 15 6-24 7z" fill="currentColor"/>
+      <path d="m0 5 15 7v20L0 24z" fill="currentColor"/>
+      <path d="m15 12 24-7v20l-24 7z" fill="currentColor"/>
+      <path d="m0 5 15 7v20L0 24z" fill="#48372f" opacity=".25"/>
+      <path d="m6 7 5 2v20l-5-3zm16 3 5-1v20l-5 1z" fill="#eac488" stroke="none"/>
+      <path d="m6 7 23-6 5 2-23 6zm16 3L7 3l5-1 15 7z" fill="#f1ce90" stroke="none"/>
+      <path d="M19 4Q4-6 8-8q6-2 11 12zm0 0q4-14 9-12 5 4-9 12z" fill="#e8bb76"/>
+    </g>
+    <g id="shelf" stroke="#503d31" stroke-width="1.7">
+      <path d="M0 0h98v8H0z" fill="url(#wood)"/><path d="M9 9h10L9 23zm69 0h10L78 23z" fill="#9a704b"/>
+      <path d="M2 1h94" stroke="#d6a877"/>
+    </g>
+    <g id="ribbons">
+      <ellipse cy="1" rx="13" ry="4" fill="#cea274"/><path d="M-11 0v-12h22V0q-11 5-22 0" fill="currentColor" stroke="#71503a" stroke-width="1.3"/>
+      <ellipse cy="-12" rx="13" ry="4" fill="#e0b880" stroke="#78543e" stroke-width="1.2"/>
+      <ellipse cy="-12" rx="3.2" ry="1.7" fill="#655141"/>
+    </g>
+    <g id="branch">
+      <path d="M0 0q23 7 49-2" fill="none" stroke="#25463c" stroke-width="4"/>
+      <g fill="none" stroke-linecap="round" stroke-width="2.3">
+        <path d="m4 1-3-9m9 11L5-9m11 13-5-13m11 13-4-13m10 12-2-13m10 12 1-11m4 10 4-10" stroke="#648365"/>
+        <path d="m4 2-5 4m12-3L5 10m13-6-7 9m14-9-7 10m14-12-5 10m13-12-5 9m12-11-4 9" stroke="#42674d"/>
+      </g>
+      <g fill="#ba5142"><circle cx="22" cy="2" r="3.2"/><circle cx="27" cy="4" r="2.6"/><circle cx="26" cy="-1" r="2.4"/></g>
+    </g>
+    <g id="swag">
+      <path d="M0 0q74 57 150 0" fill="none" stroke="#263f32" stroke-width="9"/>
+      <use xlink:href="#branch" transform="translate(1 0) rotate(28)"/>
+      <use xlink:href="#branch" transform="translate(38 17) rotate(10)"/>
+      <use xlink:href="#branch" transform="translate(76 25) rotate(-9)"/>
+      <use xlink:href="#branch" transform="translate(112 18) rotate(-26)"/>
+      <path d="M0 2q71 68 150 1" fill="none" stroke="#be9b63" stroke-width="1.5"/>
+      <g stroke="#685b42" stroke-width="1">
+        <path d="m21 18-2 5m38 7-1 6m39-4 1 5m33-18 2 5"/>
+        <g fill="#ffdc8c"><ellipse cx="19" cy="24" rx="2.5" ry="3.4"/><ellipse cx="56" cy="37" rx="2.5" ry="3.4"/><ellipse cx="96" cy="38" rx="2.5" ry="3.4"/><ellipse cx="131" cy="25" rx="2.5" ry="3.4"/></g>
+      </g>
+    </g>
+    <g id="lamp">
+      <circle cy="43" r="55" fill="url(#halo)"/>
+      <path d="M0 0v23" stroke="#433e30" stroke-width="2.6"/>
+      <path d="M-3 21h6v6h-6z" fill="#be905c" stroke="#514535"/>
+      <path d="M-6 37q0 12 6 12t6-12" fill="#ffe4a0" stroke="#c7a165" stroke-width="1.6"/>
+      <path d="M-17 39q5-2 9-11 1-3 8-3t8 3q4 9 9 11z" fill="#b9945e" stroke="#624a36" stroke-width="1.8"/>
+      <path d="M-12 36q5-2 7-7" fill="none" stroke="#e3c48b" stroke-width="1.5"/>
+      <ellipse cy="39" rx="17" ry="2.8" fill="#efcf90" stroke="#8d6b47"/>
+    </g>
+  </defs>
+  <rect width="900" height="300" fill="url(#wall)"/>
+  <rect width="900" height="300" fill="url(#boards)"/>
+  <path d="M0 82h900v7H0z" fill="#36594a"/><path d="M0 82h900" stroke="#758773" opacity=".6"/>
+  <!-- The softly lit middle panels stay quiet behind the active parcel. -->
+  <g fill="none" stroke="#84907a" stroke-opacity=".35" stroke-width="1.6">
+    <path d="M344 264V109q0-11 12-13 17-4 29-12h130q12 8 29 12 12 2 12 13v155z"/>
+    <path d="M351 258V111q0-7 9-8 17-4 27-12h126q10 8 27 12 9 1 9 8v147z"/>
+  </g>
+  <g transform="translate(206 92)"><use xlink:href="#lit-window"/></g>
+  <g transform="translate(699 92) scale(-1 1)"><use xlink:href="#lit-window"/></g>
+  <circle cx="236" cy="107" r="7" fill="#f8dfac"/>
+  <g stroke="#4e4033" stroke-width="2">
+    <path d="M0 0h900v14H0z" fill="url(#wood)"/>
+    <path d="M108 0h15v264h-15zm668 0h15v264h-15z" fill="url(#wood)"/>
+    <path d="m124 31 28-18h12l-40 32zm652 0-28-18h-12l40 32z" fill="#8c6648"/>
+  </g>
+  <use xlink:href="#swag" transform="translate(0 7)"/><use xlink:href="#swag" transform="translate(150 7)"/>
+  <use xlink:href="#swag" transform="translate(300 7)"/><use xlink:href="#swag" transform="translate(450 7)"/>
+  <use xlink:href="#swag" transform="translate(600 7)"/><use xlink:href="#swag" transform="translate(750 7)"/>
+  <use xlink:href="#lamp" transform="translate(300 6)"/><use xlink:href="#lamp" transform="translate(600 6)"/>
+  <g transform="translate(5 115)">
+    <use xlink:href="#gift" transform="translate(11 -30) scale(.92)" color="#aa574a"/>
+    <use xlink:href="#gift" transform="translate(53 -23) scale(.72)" color="#96a78b"/>
+    <use xlink:href="#shelf"/>
+    <use xlink:href="#ribbons" transform="translate(24 64)" color="#a74e49"/>
+    <use xlink:href="#ribbons" transform="translate(24 47)" color="#b49c61"/>
+    <use xlink:href="#ribbons" transform="translate(56 65)" color="#54847a"/>
+    <use xlink:href="#shelf" transform="translate(0 69)"/>
+  </g>
+  <g transform="translate(801 115)">
+    <use xlink:href="#ribbons" transform="translate(25 -5)" color="#b65848"/><use xlink:href="#ribbons" transform="translate(25 -20)" color="#7f987a"/>
+    <use xlink:href="#gift" transform="translate(50 -25) scale(.8)" color="#c68f60"/>
+    <use xlink:href="#shelf"/>
+    <use xlink:href="#gift" transform="translate(10 45) scale(.72)" color="#94a37f"/>
+    <use xlink:href="#gift" transform="translate(48 37) scale(.95)" color="#b55f4d"/>
+    <use xlink:href="#shelf" transform="translate(0 69)"/>
+  </g>
+  <path d="M0 247h900v53H0z" fill="#875f46"/>
+  <path d="M0 247h900l-14 9H20z" fill="#bc9367"/>
+  <path d="M0 257h900v5H0z" fill="#604837"/>
+  <g fill="none" stroke="#6a4c39" stroke-width="2" opacity=".65">
+    <path d="M11 269h96v31m9 0v-31h119v31m12 0v-31h119v31m13 0v-31h131v31m13 0v-31h119v31m12 0v-31h120v31m13 0v-31h99"/>
+  </g>
+  <g transform="translate(0 245)">
+    <use xlink:href="#gift" transform="translate(6 -30)" color="#c9aa77"/>
+    <use xlink:href="#gift" transform="translate(35 -41) scale(1.36)" color="#a44741"/>
+    <use xlink:href="#gift" transform="translate(84 -22) scale(.72)" color="#719481"/>
+    <use xlink:href="#ribbons" transform="translate(135 -1) scale(.9)" color="#be7457"/>
+    <use xlink:href="#gift" transform="translate(786 -24) scale(.78)" color="#a55849"/>
+    <use xlink:href="#gift" transform="translate(817 -37) scale(1.2)" color="#718e77"/>
+    <use xlink:href="#gift" transform="translate(860 -25) scale(.86)" color="#c28c59"/>
+  </g>
+</svg>

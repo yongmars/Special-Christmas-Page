@@ -1,0 +1,73 @@
+import assert from "node:assert/strict";
+import http from "node:http";
+import { once } from "node:events";
+import { readFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+import { chromium } from "playwright";
+import { playSorting } from "./play-sorting.mjs";
+
+// Serve the Pages build at its repository subpath and change only the test browser's clock.
+const mount = "/" + (process.env.GITHUB_REPOSITORY?.split("/")[1] || "Special-Christmas-Page");
+const root = path.resolve("dist-pages");
+const types = { ".html": "text/html", ".json": "application/json", ".js": "text/javascript",
+  ".css": "text/css", ".svg": "image/svg+xml", ".webp": "image/webp" };
+const server = http.createServer(async (req, res) => {
+  try {
+    const pathname = new URL(req.url, "http://localhost").pathname;
+    if (!pathname.startsWith(mount + "/")) throw Error();
+    let file = path.resolve(root, "." + pathname.slice(mount.length));
+    if (file !== root && !file.startsWith(root + path.sep)) throw Error();
+    if (!path.extname(file)) file = path.join(file, "index.html");
+    const body = await readFile(file);
+    res.writeHead(200, { "Content-Type": types[path.extname(file)] ?? "application/octet-stream" });
+    res.end(body);
+  } catch {
+    res.writeHead(404).end();
+  }
+});
+server.listen(0, "127.0.0.1");
+await once(server, "listening");
+const base = "http://127.0.0.1:" + server.address().port + mount;
+let browser;
+try {
+  browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || "msedge" });
+  const page = await browser.newPage({ hasTouch: true, isMobile: true,
+    viewport: { width: 320, height: 680 }, reducedMotion: "reduce", timezoneId: "America/New_York" });
+  const errors = [];
+  page.on("pageerror", error => errors.push(error.message));
+  page.on("response", res => { if (res.status() >= 400) errors.push(res.url()); });
+  await page.clock.setFixedTime(new Date("2026-12-12T23:59:59+09:00"));
+  await page.goto(base + "/games/sorting/?date=2026-12-25");
+  await page.getByText(/0時（日本時間）に公開します/).waitFor();
+  assert.equal(await page.getByRole("button", { name: "あそぶ" }).count(), 0);
+  await page.clock.setFixedTime(new Date("2026-12-13T00:00:00+09:00"));
+  await page.goto(base + "/calendar/13/");
+  await page.getByRole("link", { name: "ゲームの入口へ" }).click();
+  for (let run = 0; run < 2; run++) {
+    if (run) {
+      await page.setViewportSize({ width: 1200, height: 900 });
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+      await page.goto(base + "/games/sorting/");
+    }
+    await page.getByRole("button", { name: "あそぶ" }).tap();
+    await page.locator(".sort-piece").waitFor();
+    await page.locator(".sort-stage img").evaluateAll(imgs => Promise.all(imgs.map(img => img.decode())));
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    await page.screenshot({ path: path.join(os.tmpdir(), "christmas-sorting-" + (run ? "desktop" : "mobile") + ".png"), fullPage: true });
+    await playSorting(page, !run);
+    await page.getByRole("link", { name: "お部屋に戻る" }).tap();
+    await page.locator(".room-cake").waitFor();
+    assert.equal(await page.locator(".room-cake").count(), 1);
+    if (!run) await page.locator(".reward-notice").getByText("ケーキだ！ ねえ、ちょっと味見しちゃダメ？").waitFor();
+    else assert.equal(await page.locator(".reward-notice").count(), 0);
+    await page.reload();
+    await page.locator(".room-cake").waitFor();
+    assert.equal(await page.locator(".reward-notice").count(), 0);
+  }
+  assert.deepEqual(errors, []);
+  console.log("Pages: JST boundary, all assets, 320px touch/drag, reduced motion, two clears and one cake passed.");
+} finally {
+  await browser?.close();
+  server.close();
+}

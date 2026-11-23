@@ -1,0 +1,171 @@
+.sort-game {
+  max-width: 900px;
+  margin: 16px auto;
+  border: 1px solid #baa781;
+  border-radius: 14px;
+  background: #fffaed;
+  color: #203e34;
+  box-shadow: 0 8px 26px #593a2319;
+}
+.sort-head {
+  position: relative;
+  padding: 24px clamp(12px, 4vw, 44px) 22px;
+  border-radius: 13px 13px 0 0;
+  border-bottom: 4px double #d1b478;
+  background: radial-gradient(ellipse at 50% 125%, #385e47, transparent 75%), #173e34;
+  color: #fff8e4;
+  text-align: center;
+}
+.sort-date {
+  display: flex; align-items: center; gap: 5px;
+  position: absolute; top: 16px; left: 20px;
+  color: #f1d6a2; font: bold .95rem Georgia, serif;
+}
+.sort-date span { font: 600 .75rem/1 sans-serif; letter-spacing: .06em; }
+.sort-head h1 { font: 700 clamp(1.55rem, 4vw, 2.65rem)/1.4 "Yu Mincho", serif; }
+.sort-head h1 span { display: inline-block; }
+.sort-head small {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  color: #ffdf9a; font-size: 1rem; letter-spacing: .09em;
+}
+.sort-head small::before, .sort-head small::after {
+  content: ""; width: 35px; height: 1px; background: #bc9e61;
+}
+.sort-head p { margin-top: 8px; line-height: 1.55; text-wrap: balance; }
+.sort-body { padding: 14px clamp(10px, 3vw, 30px) 18px; }
+.sort-progress { display: flex; align-items: center; gap: 16px; margin: 0 0 12px; font-size: .875rem; }
+.sort-progress b { font: bold 1.35rem Georgia, serif; margin-left: .4em; }
+.sort-progress progress {
+  flex: 1; min-width: 24px; height: 10px; border: 0;
+  border-radius: 10px; background: #e8ddc7; accent-color: #387254;
+}
+.sort-progress progress::-webkit-progress-bar { background: #e8ddc7; border-radius: 10px; }
+.sort-progress progress::-webkit-progress-value { border-radius: 10px; background: #387254; }
+.sort-progress progress::-moz-progress-bar { border-radius: 10px; background: #387254; }
+.sort-stage {
+  position: relative; isolation: isolate; height: clamp(185px, 28vw, 260px);
+  border-radius: 9px; background: #384c37; box-shadow: 0 3px 0 #ad9978;
+}
+.sort-scenery { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.sort-cat {
+  position: absolute; bottom: 16px; width: 28%; height: 77%; pointer-events: none;
+  filter: drop-shadow(2px 3px 2px #271b1899);
+}
+.sort-noct { left: 2%; }
+.sort-lux { right: 2%; }
+.sort-belt {
+  position: absolute; bottom: 0; width: 100%; height: 30px;
+  border: 3px solid #604832; border-radius: 9px; overflow: hidden;
+  background: #433f39; box-shadow: 0 -3px 0 #cfad74;
+}
+.sort-belt i {
+  display: block; height: 8px; border-bottom: 2px solid #211f1b;
+  background: repeating-linear-gradient(110deg, #a49c86 0 11px, #574f42 12px 16px);
+}
+.sort-belt span {
+  display: block; height: 16px;
+  background: radial-gradient(circle at 12px 8px, #3d3932 0 2px, #d2b785 2.5px 5px, #73644e 5.5px 7px, transparent 8px) 0 0 / 25px 16px;
+}
+.sort-label {
+  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  background: #fff6db; color: #3a3127; padding: 4px 13px;
+  border: 2px solid #cbaa6d; border-radius: 6px;
+  font-weight: bold; font-size: clamp(.9rem, 2vw, 1.1rem); white-space: nowrap;
+  box-shadow: 0 2px 4px #35261855;
+}
+.sort-piece, .sort-display {
+  position: absolute; z-index: 2; left: 50%; bottom: 27px;
+  width: min(29%, 150px); aspect-ratio: 1; translate: -50% 0;
+  display: grid; place-items: center; user-select: none;
+}
+.sort-piece { touch-action: none; cursor: grab; }
+.sort-piece:active { cursor: grabbing; }
+.sort-piece > span { width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 3px 1px #2b1e245c); }
+.sort-piece svg, .sort-bin-icon svg { width: 100%; height: 100%; display: block; }
+.sort-feedback { text-align: center; margin: 14px 0 10px; font-weight: 700; min-height: 1.65em; }
+.sort-boxes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(5px, 2vw, 18px); }
+.sort-box {
+  --wood: #b55d56; --edge: #763c37;
+  position: relative; isolation: isolate; min-width: 0; padding: 6px 2px 10px;
+  display: grid; justify-items: center; align-content: center; gap: 4px;
+  background: repeating-linear-gradient(0deg, transparent 0 19px, #3e291a30 20px, #ffe0a729 22px), var(--wood);
+  border: 2px solid var(--edge); border-top: 9px ridge var(--wood);
+  border-radius: 4px 4px 8px 8px; box-shadow: inset 6px 0 #fff4cb2b, inset -6px 0 #2919091c, 0 4px var(--edge);
+  touch-action: manipulation;
+}
+.sort-box[data-bin="vehicle"] { --wood: #43776a; --edge: #285648; }
+.sort-box[data-bin="sweet"] { --wood: #ba8546; --edge: #7a542e; }
+.sort-box > * { pointer-events: none; }
+.sort-bin-icon {
+  width: clamp(44px, 6vw, 62px); aspect-ratio: 1; padding: 3px;
+  border-radius: 50%; background: #fff3d5; box-shadow: 0 2px 1px #44322255;
+}
+.sort-box strong {
+  border-radius: 3px; padding: 1px .45em; background: #fff4da; color: #372f28;
+  font-size: clamp(.875rem, 2vw, 1.1rem); line-height: 1.5;
+}
+@media (hover: hover) {
+  .sort-box[aria-disabled="false"]:hover { filter: brightness(1.08); }
+}
+.sort-wrapped {
+  position: absolute; z-index: 3; top: 2px; left: 50%; translate: -50% -25%;
+  display: grid; place-items: center; width: 62px; height: 62px;
+}
+.sort-wrapped::before, .sort-wrapped::after {
+  content: "✦"; color: #ffe28a; text-shadow: 0 1px 2px #6c4627;
+  position: absolute; top: 2%; left: -14%; font-size: 22px;
+}
+.sort-wrapped::after { left: auto; right: -15%; top: 26%; font-size: 16px; }
+.sort-parcel {
+  position: relative; display: block; width: 73%; height: 58%; margin-top: 15%;
+  border: 2px solid #65342e; border-radius: 3px;
+  background: linear-gradient(90deg, transparent 41%, #ecc574 41% 55%, transparent 55%),
+    repeating-linear-gradient(45deg, #ab453c 0 9px, #c36350 9px 12px);
+  box-shadow: inset -6px -5px #6b302c46, 0 3px 4px #36231b66;
+}
+.sort-parcel i {
+  position: absolute; left: -6%; width: 112%; top: -3%; height: 23%;
+  border: 2px solid #753932; border-radius: 3px;
+  background: linear-gradient(90deg, #c95b49 40%, #f9d48b 40% 55%, #c95b49 55%);
+}
+.sort-parcel::before, .sort-parcel::after {
+  content: ""; position: absolute; bottom: 98%; width: 34%; height: 31%; left: 14%;
+  border: 4px solid #f2c976; border-radius: 80% 70% 8% 70%; transform: rotate(12deg);
+}
+.sort-parcel::after { left: 49%; transform: scaleX(-1) rotate(12deg); }
+.sort-welcome { text-align: center; }
+.sort-welcome h2 { margin: 18px 0 6px; color: #944238; font: bold 1.8rem "Yu Mincho", serif; }
+.sort-dialogue { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0 14px; text-align: left; }
+.sort-dialogue p { border-left: 3px solid #5f8e74; padding: 3px 9px; line-height: 1.5; }
+.sort-dialogue p + p { border-color: #b65950; }
+.sort-dialogue b { display: block; font-size: .875rem; color: #366650; }
+.sort-dialogue p + p b { color: #96463a; }
+.sort-start { min-width: 155px; justify-content: center; }
+.sort-home { margin: 16px auto 0; text-align: center; }
+a.sort-home.action { display: flex; width: fit-content; }
+@media (max-width: 575px) {
+  .sort-date { position: static; justify-content: center; margin-bottom: 5px; }
+  .sort-head { padding: 10px 12px 13px; }
+  .sort-head h1 { font-size: clamp(1.28rem, 5.9vw, 2rem); }
+  .sort-box strong { padding-inline: 1px; white-space: nowrap; }
+  .sort-dialogue { grid-template-columns: 1fr; gap: 5px; }
+  .sort-dialogue p { padding: 2px 6px; }
+  .sort-dialogue b { display: inline; margin-right: .5em; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sort-belt i { animation: sort-tread .7s linear infinite; }
+  .sort-piece > span { animation: sort-arrive .38s ease-out both; }
+  .sort-wrapped { animation: sort-wrap .84s ease-out both; }
+  .sort-box.wrapping { animation: sort-bounce .34s .35s ease-out; }
+  @keyframes sort-tread { to { background-position-x: 17px; } }
+  @keyframes sort-arrive { from { opacity: 0; transform: translateX(-60%); } }
+  @keyframes sort-wrap {
+    0%, 40% { opacity: 0; transform: scale(.5); }
+    58% { opacity: 1; transform: scale(1.12); }
+    75%, 100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes sort-bounce { 45% { transform: translateY(4px); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sort-piece.packing { opacity: 0; }
+}

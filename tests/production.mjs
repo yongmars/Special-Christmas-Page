@@ -73,7 +73,7 @@ if (process.argv[2] === "serve") {
       await clock("2026-12-" + String(day - 1).padStart(2, "0") + "T23:59:55");
       assert.match(await body("/games/" + id), /に公開します/);
       await clock("2026-12-" + String(day).padStart(2, "0") + "T00:00:00");
-      assert.match(await body("/games/" + id), day < 13 ? /あそぶ/ : /準備中です/);
+      assert.match(await body("/games/" + id), id === "delivery" ? /準備中です/ : /あそぶ/);
       assert.match(await body("/calendar/" + day), /ゲームの入口へ/);
     }
     assert.match(await body("/calendar/20"), /クリスマス4コマ/);
