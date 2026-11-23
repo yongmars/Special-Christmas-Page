@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from "react";
 import { Link } from "@/lib/navigation";
 import { publicPath } from "@/lib/public-path";
 import { bins, comboPoints, crossingTime, emptyScore, makeSortingRound, rank, scoreItem, type BinId, type Outcome, type SortingScore } from "@/lib/sorting";
@@ -36,25 +36,39 @@ function Scoreboard({ stats, result = false }: { stats: SortingScore; result?: b
 }
 
 type PhaseClock = { animation: Animation; duration: number; finish: () => void };
+type Grip = { id: number; x: number; y: number; offsetX: number; offsetY: number; moved: boolean };
 export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin: () => void }) {
   const [round, setRound] = useState<ReturnType<typeof makeSortingRound>>([]);
   const [index, setIndex] = useState(0);
   const [stats, setStats] = useState(emptyScore);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [paused, setPaused] = useState(false);
+  const [selected, setSelected] = useState(false);
   const frozen = useRef(false);
   const clock = useRef<PhaseClock | null>(null);
-  const piece = useRef<HTMLDivElement>(null);
+  const piece = useRef<HTMLButtonElement>(null);
+  const ghost = useRef<HTMLDivElement>(null);
+  const grip = useRef<Grip | null>(null);
+  const dropOrigin = useRef<DOMRect | null>(null);
   const boxes = useRef<HTMLDivElement>(null);
   const title = useRef<HTMLHeadingElement>(null);
   const item = round[index];
   const done = round.length > 0 && !item;
   const grade = rank(stats.correct);
 
+  function releaseGrip() {
+    const held = grip.current;
+    grip.current = null;
+    if (ghost.current) ghost.current.hidden = true;
+    piece.current?.removeAttribute("data-held");
+    if (held && piece.current?.hasPointerCapture(held.id)) piece.current.releasePointerCapture(held.id);
+  }
+
   function pause() {
     if (!clock.current || frozen.current) return;
     frozen.current = true;
     clock.current.animation.pause();
+    releaseGrip();
     setPaused(true);
   }
   function resume() {
@@ -82,10 +96,11 @@ export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin:
     setIndex(0);
     setStats(emptyScore);
     setOutcome(null);
+    setSelected(false);
     setRound(makeSortingRound());
   }
 
-  function judge(bin: BinId | null) {
+  function judge(bin: BinId | null, fromHand: DOMRect | null = null) {
     const phase = clock.current;
     const el = piece.current;
     if (!phase || !el || !item || outcome || frozen.current) return;
@@ -94,12 +109,45 @@ export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin:
     const fraction = Math.min(1, Number(phase.animation.currentTime) / phase.duration);
     const answer: Outcome = fraction >= 1 || bin === null ? "timeout" : bin === item.bin ? "correct" : "wrong";
     clock.current = null;
+    dropOrigin.current = fromHand;
+    releaseGrip();
+    setSelected(false);
     el.style.left = (fraction * 100) + "%";
     phase.animation.cancel();
     const next = scoreItem(stats, answer);
     setStats(next);
     setOutcome(answer);
     if (index + 1 === round.length && rank(next.correct) !== "C") onWin();
+  }
+
+  function pickUp(e: PointerEvent<HTMLButtonElement>) {
+    if (!e.isPrimary || e.button !== 0 || !clock.current || outcome || frozen.current) return;
+    e.preventDefault();
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    grip.current = { id: e.pointerId, x: e.clientX, y: e.clientY,
+      offsetX: rect.left - e.clientX, offsetY: rect.top - e.clientY, moved: false };
+  }
+  function moveHeld(e: PointerEvent<HTMLButtonElement>) {
+    const held = grip.current, copy = ghost.current;
+    if (!held || held.id !== e.pointerId || !copy) return;
+    if (!held.moved && Math.hypot(e.clientX - held.x, e.clientY - held.y) < 5) return;
+    held.moved = true;
+    e.currentTarget.dataset.held = "true";
+    copy.style.left = e.clientX + held.offsetX + "px";
+    copy.style.top = e.clientY + held.offsetY + "px";
+    copy.hidden = false;
+  }
+  function place(e: PointerEvent<HTMLButtonElement>) {
+    const held = grip.current;
+    if (!held || held.id !== e.pointerId) return;
+    if (!held.moved) {
+      setSelected(true);
+    } else {
+      const bin = bins.find(({ id }) => containsPointer(boxes.current!.querySelector('[data-bin="' + id + '"]')!, e));
+      if (bin) judge(bin.id, ghost.current!.getBoundingClientRect());
+    }
+    releaseGrip();
   }
 
   useLayoutEffect(() => {
@@ -116,7 +164,8 @@ export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin:
         const from = el.getBoundingClientRect();
         const dx = target.left + target.width / 2 - from.left - from.width / 2;
         const dy = target.top + target.height * .3 - from.top - from.height / 2;
-        frames = [{ transform: "none", opacity: 1 },
+        const hand = dropOrigin.current;
+        frames = [{ transform: hand ? `translate(${hand.left - from.left}px, ${hand.top - from.top}px)` : "none", opacity: 1 },
           { transform: `translate(${dx}px, ${dy}px) scale(.22)`, opacity: 0, offset: .55 },
           { opacity: 0 }];
       }
@@ -150,7 +199,7 @@ export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin:
 
   const feedback = outcome === "correct" ? "正解！ +" + comboPoints(stats.combo) + "点"
     : outcome === "wrong" ? "おっと、違う箱みたい！"
-    : outcome === "timeout" ? "右端に到着！ 次の品物へ" : "どの箱に入れる？";
+    : outcome === "timeout" ? "右端に到着！ 次の品物へ" : selected ? "選択中。入れる箱をタップ！" : "どの箱に入れる？";
   return <article className="sort-game" aria-label={game.title} data-active={Boolean(item)} data-paused={paused}>
     <header className="sort-head">
       <div className="sort-date"><Icon name="calendar" size={16} />12.13 <span>SUN</span></div>
@@ -166,15 +215,23 @@ export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin:
           <button type="button" className="sort-pause" onClick={paused ? resume : pause}>{paused ? "再開" : "一時停止"}</button>
         </div>
       </>}
-      <div className="sort-stage">
-        <img className="sort-scenery" src={publicPath("/images/christmas/sorting-workshop.svg")} alt="" />
+      <div className="sort-stage" onDragStart={e => e.preventDefault()}>
+        <img className="sort-scenery" draggable={false} src={publicPath("/images/christmas/sorting-workshop.svg")} alt="" />
         <div className="sort-cat sort-noct"><Character who="noct" mirrored /></div>
         <div className="sort-cat sort-lux"><Character who="lux" /></div>
         {item ? <>
           <span className="sort-label" aria-live="polite">{item.name}</span>
           <div className="sort-track">
-            <div className="sort-piece" key={index} ref={piece}><span><ItemArt id={item.id} /></span></div>
+            <button type="button" className="sort-piece" key={index} ref={piece}
+              aria-label={item.name + "を選ぶ"} aria-pressed={selected} aria-disabled={paused || outcome !== null}
+              onPointerDown={pickUp} onPointerMove={moveHeld} onPointerUp={place}
+              onLostPointerCapture={e => { if (grip.current?.id === e.pointerId) releaseGrip(); }}
+              onPointerCancel={releaseGrip}
+              onClick={e => { if (e.detail === 0 && clock.current && !outcome && !frozen.current) setSelected(true); }}>
+              <span><ItemArt id={item.id} /></span>
+            </button>
           </div>
+          <div className="sort-in-hand" ref={ghost} hidden aria-hidden="true"><ItemArt id={item.id} /></div>
         </> : <div className="sort-display">{done
           ? <div className="sort-rank" role="img" aria-label={grade + "ランク"}><small>RANK</small>{grade}</div> : <Parcel />}</div>}
         <div className="sort-belt" aria-hidden="true"><i /><span /></div>
@@ -203,6 +260,7 @@ export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin:
           <Scoreboard stats={stats} result />
         </>}
         <Dialogue correct={done ? stats.correct : undefined} />
+        {!done && <p className="sort-tip">品物をつかんで箱に入れても遊べるよ。</p>}
         <button type="button" className="action green sort-start" onClick={start}>
           <Icon name={done ? "game" : "gift"} size={20} />
           {done ? "もう一度あそぶ" : ctx.preview ? "試遊する" : "あそぶ"}

@@ -90,9 +90,15 @@
   width: min(29%, 150px); aspect-ratio: 1; translate: -50% 0;
   display: grid; place-items: center; user-select: none;
 }
-.sort-stage { --item-size: clamp(68px, 12vw, 120px); }
+.sort-stage { --item-size: clamp(68px, 12vw, 120px); user-select: none; -webkit-user-select: none; z-index: 1; }
+.sort-stage img { pointer-events: none; -webkit-user-drag: none; }
 .sort-track { position: absolute; z-index: 2; bottom: 25px; height: var(--item-size); inset-inline: calc(var(--item-size) / 2); pointer-events: none; }
-.sort-piece { width: var(--item-size); left: 0; bottom: 0; }
+.sort-piece { width: var(--item-size); left: 0; bottom: 0; padding: 0; border: 0; background: transparent; pointer-events: auto; touch-action: none; border-radius: 20%; }
+button.sort-piece:not(:disabled) { cursor: grab; }
+.sort-piece[aria-pressed="true"] { outline: 2px dashed #ffda83; outline-offset: -2px; background: #ffeeb01a; }
+.sort-piece[data-held] > span { opacity: .35; }
+.sort-in-hand { position: fixed; z-index: 5; width: var(--item-size); aspect-ratio: 1; pointer-events: none; filter: drop-shadow(0 4px 2px #31201766); }
+.sort-in-hand svg { display: block; width: 100%; height: 100%; }
 .sort-game[data-active="true"] .sort-cat { bottom: auto; top: 9%; height: 48%; width: 23%; }
 .sort-piece > span { width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 3px 1px #2b1e245c); }
 .sort-piece svg, .sort-bin-icon svg { width: 100%; height: 100%; display: block; }
@@ -155,6 +161,7 @@
 .sort-dialogue b { display: block; font-size: .875rem; color: #366650; }
 .sort-dialogue p + p b { color: #96463a; }
 .sort-start { min-width: 155px; justify-content: center; }
+.sort-tip { margin-bottom: 8px; font-size: .9rem; }
 .sort-home { margin: 16px auto 0; text-align: center; }
 a.sort-home.action { display: flex; width: fit-content; }
 @media (max-width: 575px) {

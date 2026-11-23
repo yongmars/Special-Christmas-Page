@@ -56,6 +56,23 @@ try {
       await page.emulateMedia({ reducedMotion: "no-preference" });
     }
     if (run) await page.goto(base + "/games/sorting/");
+    const scenery = page.locator(".sort-stage img");
+    await scenery.first().waitFor();
+    assert.ok(await scenery.evaluateAll(imgs => imgs.length === 3 &&
+      imgs.every(img => getComputedStyle(img).pointerEvents === "none")));
+    if (run === 2) {
+      const stage = page.locator(".sort-stage");
+      await stage.evaluate(el => {
+        el.addEventListener("dragstart", () => { el.dataset.nativeDrag = "yes"; });
+        el.scrollIntoView({ block: "center" });
+      });
+      const bounds = await stage.boundingBox();
+      await page.mouse.move(bounds.x + 8, bounds.y + 8);
+      await page.mouse.down();
+      await page.mouse.move(bounds.x + 75, bounds.y + 20, { steps: 6 });
+      await page.mouse.up();
+      assert.equal(await stage.getAttribute("data-native-drag"), null);
+    }
     await page.getByRole("button", { name: "あそぶ" }).tap();
     await page.locator(".sort-piece").waitFor();
     await page.locator(".sort-stage img").evaluateAll(imgs => Promise.all(imgs.map(img => img.decode())));

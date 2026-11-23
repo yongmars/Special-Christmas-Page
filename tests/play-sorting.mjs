@@ -10,6 +10,31 @@ async function stat(page, label) {
   return (await page.locator(".sort-stats div").filter({ has: page.getByText(label, { exact: true }) }).locator("dd").innerText()).trim();
 }
 
+async function handleMovingItem(page, target, touch, drag) {
+  const piece = page.locator(".sort-piece");
+  await piece.evaluate(el => el.scrollIntoView({ block: "center" }));
+  const box = await piece.boundingBox(), bin = await target.boundingBox();
+  const x = box.x + box.width / 2, y = box.y + box.height / 2;
+  const endX = bin.x + bin.width / 2, endY = bin.y + bin.height / 2;
+  assert.ok(await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.closest(".sort-piece") != null, [x, y]));
+  if (touch && drag) {
+    const cdp = await page.context().newCDPSession(page);
+    const finger = (type, points) => cdp.send("Input.dispatchTouchEvent", {type, touchPoints: points});
+    await finger("touchStart", [{ x, y, id: 1 }]);
+    await finger("touchMove", [{ x: endX, y: endY, id: 1 }]);
+    await page.locator(".sort-in-hand:visible").waitFor();
+    await finger("touchEnd", []);
+    await cdp.detach();
+  } else if (touch) await page.touchscreen.tap(x, y);
+  else if (drag) {
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(endX, endY, { steps: 6 });
+    await page.locator(".sort-in-hand:visible").waitFor();
+    await page.mouse.up();
+  } else await page.mouse.click(x, y);
+}
+
 export async function playSorting(page, touch, { wrong = [], timeout = [], deadlineTap = [], checkPause = false } = {}) {
   const names = new Set();
   let score = 0, combo = 0, best = 0, misses = 0;
@@ -53,6 +78,11 @@ export async function playSorting(page, touch, { wrong = [], timeout = [], deadl
     const failed = wrong.includes(i) || timeout.includes(i) || deadlineTap.includes(i);
     const target = wrong.includes(i) ? page.locator('.sort-box:not([data-bin="' + id + '"])').first()
       : page.locator('[data-bin="' + id + '"]');
+    if (i === 4) {
+      await handleMovingItem(page, target, touch, false);
+      assert.equal(await piece.getAttribute("aria-pressed"), "true");
+      await page.getByText("選択中。入れる箱をタップ！").waitFor();
+    }
     if (timeout.includes(i)) {
       // Leave the item on the belt through the real deadline.
       await page.getByText("右端に到着！ 次の品物へ").waitFor({ timeout: duration + 2000 });
@@ -65,6 +95,8 @@ export async function playSorting(page, touch, { wrong = [], timeout = [], deadl
         button.click();
       });
       await page.getByText("右端に到着！ 次の品物へ").waitFor();
+    } else if (i === 5) {
+      await handleMovingItem(page, target, touch, true);
     } else if (i === 1) {
       await target.evaluate(el => { el.click(); el.click(); });
     } else if (!touch && i === 2) await target.press("Enter");
