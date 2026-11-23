@@ -312,7 +312,7 @@ try {
     await p.getByRole("button", { name: "試遊する" }).click();
     await playSorting(p, name !== "desktop");
     await p.getByRole("button", { name: "もう一度あそぶ" }).click();
-    assert.equal(await p.locator("progress").getAttribute("value"), "0");
+    assert.equal(await p.locator("progress").getAttribute("value"), "1");
     await p.getByRole("link", { name: "お部屋に戻る", exact: true }).click();
     await checkReward("sorting", "lux", "ケーキだ！ ねえ、ちょっと味見しちゃダメ？", ".room-cake", "cake");
     await reward.getByRole("button").click();

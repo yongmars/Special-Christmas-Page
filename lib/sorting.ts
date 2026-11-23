@@ -32,3 +32,31 @@ export function makeSortingRound() {
   const order = shuffled(groups.flatMap((group, index) => group.map(() => index)));
   return order.map(index => groups[index].shift()!);
 }
+
+export const emptyScore = { correct: 0, misses: 0, score: 0, combo: 0, bestCombo: 0 };
+export type SortingScore = typeof emptyScore;
+export type Outcome = "correct" | "wrong" | "timeout";
+
+export function crossingTime(index: number) {
+  return index < 5 ? 6000 : index < 10 ? 5000 : 4000;
+}
+
+export function comboPoints(combo: number) {
+  return 100 + Math.min(combo - 1, 4) * 20;
+}
+
+export function scoreItem(previous: SortingScore, outcome: Outcome): SortingScore {
+  if (outcome !== "correct") return { ...previous, misses: previous.misses + 1, combo: 0 };
+  const combo = previous.combo + 1;
+  return {
+    ...previous, combo, correct: previous.correct + 1,
+    score: previous.score + comboPoints(combo),
+    bestCombo: Math.max(previous.bestCombo, combo),
+  };
+}
+
+export function rank(correct: number) {
+  if (correct === 15) return "S";
+  if (correct >= 13) return "A";
+  return correct === 12 ? "B" : "C";
+}

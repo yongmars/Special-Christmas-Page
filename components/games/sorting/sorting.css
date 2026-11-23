@@ -42,6 +42,18 @@
 .sort-progress progress::-webkit-progress-bar { background: #e8ddc7; border-radius: 10px; }
 .sort-progress progress::-webkit-progress-value { border-radius: 10px; background: #387254; }
 .sort-progress progress::-moz-progress-bar { border-radius: 10px; background: #387254; }
+.sort-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0 0 6px; border: 1px solid #dbccab; border-radius: 7px; background: #f6eedb; }
+.sort-stats div { text-align: center; margin-block: 5px; border-right: 1px solid #dccbaa; }
+.sort-stats div:last-child { border: 0; }
+.sort-stats dt { font-size: .875rem; font-weight: 600; }
+.sort-stats dd { margin: 0; font: 700 clamp(1.15rem, 2.8vw, 1.6rem)/1.15 Georgia, serif; font-variant-numeric: tabular-nums; }
+.sort-stats small { font: 700 .65rem sans-serif; }
+.sort-streak { color: #92351d; background: #ffe3a5; border-radius: 5px; }
+.sort-pause { min-height: 44px; padding: 4px 12px; border-color: #a99976; font-weight: 600; }
+.sort-pause-cover { position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; border-radius: inherit; background: #183d32d9; color: white; font-size: 1.3rem; font-weight: 700; }
+.sort-rank { display: grid; align-content: center; width: 86%; aspect-ratio: 1; border-radius: 50%; border: 5px double #af884b; background: radial-gradient(at 35% 25%, #fff5c8, #edcc86); color: #683c26; text-align: center; box-shadow: 0 3px 10px #27190c66; font: bold clamp(1.8rem, 5vw, 3.4rem)/1 Georgia, serif; }
+.sort-rank small { font: bold .75rem/1.2 Georgia, serif; letter-spacing: .08em; }
+.sort-welcome .sort-stats { margin-top: 12px; }
 .sort-stage {
   position: relative; isolation: isolate; height: clamp(185px, 28vw, 260px);
   border-radius: 9px; background: #384c37; box-shadow: 0 3px 0 #ad9978;
@@ -78,8 +90,10 @@
   width: min(29%, 150px); aspect-ratio: 1; translate: -50% 0;
   display: grid; place-items: center; user-select: none;
 }
-.sort-piece { touch-action: none; cursor: grab; }
-.sort-piece:active { cursor: grabbing; }
+.sort-stage { --item-size: clamp(68px, 12vw, 120px); }
+.sort-track { position: absolute; z-index: 2; bottom: 25px; height: var(--item-size); inset-inline: calc(var(--item-size) / 2); pointer-events: none; }
+.sort-piece { width: var(--item-size); left: 0; bottom: 0; }
+.sort-game[data-active="true"] .sort-cat { bottom: auto; top: 9%; height: 48%; width: 23%; }
 .sort-piece > span { width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 3px 1px #2b1e245c); }
 .sort-piece svg, .sort-bin-icon svg { width: 100%; height: 100%; display: block; }
 .sort-feedback { text-align: center; margin: 14px 0 10px; font-weight: 700; min-height: 1.65em; }
@@ -153,12 +167,12 @@ a.sort-home.action { display: flex; width: fit-content; }
   .sort-dialogue b { display: inline; margin-right: .5em; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .sort-belt i { animation: sort-tread .7s linear infinite; }
-  .sort-piece > span { animation: sort-arrive .38s ease-out both; }
-  .sort-wrapped { animation: sort-wrap .84s ease-out both; }
-  .sort-box.wrapping { animation: sort-bounce .34s .35s ease-out; }
+  .sort-game[data-active="true"] .sort-belt i { animation: sort-tread .7s linear infinite; }
+  .sort-wrapped { animation: sort-wrap .62s ease-out both; }
+  .sort-box.wrapping { animation: sort-bounce .26s .33s ease-out; }
+  .sort-rank { animation: sort-bounce .4s ease-out; }
+  .sort-game[data-paused="true"] :is(.sort-belt i, .sort-wrapped, .sort-box) { animation-play-state: paused; }
   @keyframes sort-tread { to { background-position-x: 17px; } }
-  @keyframes sort-arrive { from { opacity: 0; transform: translateX(-60%); } }
   @keyframes sort-wrap {
     0%, 40% { opacity: 0; transform: scale(.5); }
     58% { opacity: 1; transform: scale(1.12); }
@@ -166,6 +180,11 @@ a.sort-home.action { display: flex; width: fit-content; }
   }
   @keyframes sort-bounce { 45% { transform: translateY(4px); } }
 }
-@media (prefers-reduced-motion: reduce) {
-  .sort-piece.packing { opacity: 0; }
+@media (max-width: 575px) {
+  .sort-game[data-active="true"] .sort-date { display: none; }
+  .sort-game[data-active="true"] .sort-head { padding-block: 7px; }
+  .sort-game[data-active="true"] .sort-head p { font-size: .9rem; margin-top: 3px; }
+  .sort-progress { gap: 8px; margin-bottom: 6px; }
+  .sort-streak dd { white-space: nowrap; }
+  .sort-body { padding-top: 8px; }
 }

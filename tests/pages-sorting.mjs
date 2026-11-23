@@ -44,29 +44,40 @@ try {
   await page.clock.setFixedTime(new Date("2026-12-13T00:00:00+09:00"));
   await page.goto(base + "/calendar/13/");
   await page.getByRole("link", { name: "ゲームの入口へ" }).click();
-  for (let run = 0; run < 2; run++) {
-    if (run) {
+  const trials = [
+    { wrong: [0, 6], deadlineTap: [3], timeout: [14], checkPause: true }, // 11, no reward
+    { wrong: [2, 7, 12] }, // 12, first reward
+    { wrong: [4, 7, 9, 11] }, // subsequent loss
+    { wrong: [8] }, // subsequent win
+  ];
+  for (const [run, trial] of trials.entries()) {
+    if (run >= 2) {
       await page.setViewportSize({ width: 1200, height: 900 });
       await page.emulateMedia({ reducedMotion: "no-preference" });
-      await page.goto(base + "/games/sorting/");
     }
+    if (run) await page.goto(base + "/games/sorting/");
     await page.getByRole("button", { name: "あそぶ" }).tap();
     await page.locator(".sort-piece").waitFor();
     await page.locator(".sort-stage img").evaluateAll(imgs => Promise.all(imgs.map(img => img.decode())));
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-    await page.screenshot({ path: path.join(os.tmpdir(), "christmas-sorting-" + (run ? "desktop" : "mobile") + ".png"), fullPage: true });
-    await playSorting(page, !run);
+    await page.screenshot({ path: path.join(os.tmpdir(), "christmas-sorting-" + (run >= 2 ? "desktop" : "mobile") + ".png"), fullPage: true });
+    await playSorting(page, run < 2, trial);
     await page.getByRole("link", { name: "お部屋に戻る" }).tap();
+    await page.locator(".room-scene").waitFor();
+    if (run === 0) {
+      assert.equal(await page.locator(".room-cake,.reward-notice").count(), 0);
+      continue;
+    }
     await page.locator(".room-cake").waitFor();
     assert.equal(await page.locator(".room-cake").count(), 1);
-    if (!run) await page.locator(".reward-notice").getByText("ケーキだ！ ねえ、ちょっと味見しちゃダメ？").waitFor();
+    if (run === 1) await page.locator(".reward-notice").getByText("ケーキだ！ ねえ、ちょっと味見しちゃダメ？").waitFor();
     else assert.equal(await page.locator(".reward-notice").count(), 0);
     await page.reload();
     await page.locator(".room-cake").waitFor();
     assert.equal(await page.locator(".reward-notice").count(), 0);
   }
   assert.deepEqual(errors, []);
-  console.log("Pages: JST boundary, all assets, 320px touch/drag, reduced motion, two clears and one cake passed.");
+  console.log("Pages: JST release, 320px taps, desktop clicks, pause, timeout, scores, ranks and persistent cake passed.");
 } finally {
   await browser?.close();
   server.close();
