@@ -14,7 +14,6 @@ export function Room({ decorations, arriving }: { decorations: string[]; arrivin
       <svg className="room-rewards" data-arriving={arriving} viewBox="0 0 1649 954" aria-label="ゲームで増えたお部屋の飾り" role="img">
         <defs>
           <radialGradient id="lamp"><stop stopColor="#fffbe0"/><stop offset=".23" stopColor="#fff1ac"/><stop offset=".5" stopColor="#ffc456" stopOpacity=".7"/><stop offset="1" stopColor="#ffb431" stopOpacity="0"/></radialGradient>
-          <linearGradient id="pine"><stop stopColor="#254730"/><stop offset=".6" stopColor="#548153"/><stop offset="1" stopColor="#a4ad67"/></linearGradient>
           <linearGradient id="ribbon"><stop stopColor="#ac773e"/><stop offset=".46" stopColor="#fff0b7"/><stop offset="1" stopColor="#d39c52"/></linearGradient>
           <g id="parcel" stroke="#63382b" strokeWidth="1.5" strokeLinejoin="round">
             <path d="M0 1 40 -6 65 3 24 13Z" fill="currentColor"/><path d="M0 1 24 13 24 44 0 32Z" fill="currentColor"/><path d="M24 13 65 3 65 33 24 44Z" fill="currentColor"/>
@@ -40,16 +39,15 @@ export function Room({ decorations, arriving }: { decorations: string[]; arrivin
           {[[812,185],[843,201],[872,207],[781,244],[807,261],[844,272],[879,270],[911,258],[748,322],[782,345],[825,357],[873,356],[915,345],[959,327],[711,408],[747,431],[803,449],[854,455],[910,449],[964,432],[995,413],[666,512],[710,541],[771,563],[844,574],[913,569],[982,548],[1030,524],[644,601],[692,619],[752,633],[834,640],[907,637],[978,627],[1035,615]].map(([x,y]) =>
             <g key={x+"-"+y}><circle cx={x} cy={y} r="19" fill="url(#lamp)"/><circle cx={x} cy={y} r="3.4" fill="#fffacc"/></g>)}
         </g>}
-        {has("wreath") && <g className="wreath" transform="translate(1318 217)"><title>暖炉の上のクリスマスリース</title>
-          <path d="M0 -77V-89" stroke="#a68549" strokeWidth="4"/>
-          <circle r="65" fill="none" stroke="#28492c" strokeWidth="25"/>
-          {Array.from({length:32},(_,i)=><g key={i} transform={"rotate("+i*11.25+") translate(0 -65)"}>
-            <path d="M-15 0Q-5 -18 18 -19Q11 -6 -15 0ZM-11 1Q7 -2 19 11Q0 13 -11 1Z" fill="url(#pine)" stroke="#395438"/>
-            {i%4===0 && <><circle r="5" fill="#bc3c2c"/><circle cx="6" cy="-5" r="4" fill="#e65b39"/></>}
-          </g>)}
-          <path d="M0 -62Q-45 -94 -32 -52Q-18 -43 0 -62Q40 -90 33 -53Q20 -43 0 -62ZM-6 -60l-17 34 15 -6 8 -25 12 29 12 4 -15 -36Z" fill="#b63731" stroke="#77332d" strokeWidth="2"/>
-          <circle cy="-62" r="8" fill="#e8b663"/>
-        </g>}
+        {has("wreath") && (
+          <image
+            className="wreath"
+            href={publicPath("/images/christmas/wreath.webp")}
+            x="1220" y="135" width="196" height="196"
+          >
+            <title>暖炉の上のクリスマスリース</title>
+          </image>
+        )}
         {has("presents") && <g className="new-present"><title>ツリーの下に並んだプレゼント</title>
           {[[642,683,1.35,"#963c37"],[711,699,1.1,"#dec89d"],[882,679,1.4,"#547755"],[955,700,1.05,"#b84839"],[657,725,.95,"#466956"],[751,721,1.3,"#af4742"],[837,734,1.05,"#e6c88f"],[913,735,.83,"#577d69"]].map(([x,y,k,color])=><use key={x} href="#parcel" transform={"translate("+x+" "+y+") scale("+k+")"} color={String(color)}/>)}
         </g>}
