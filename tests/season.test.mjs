@@ -32,6 +32,7 @@ test("25日分の登録、画像、クイズ、ゲーム日付を検証", async 
     const files = [d.image, ...(d.images || [])]
       .filter(Boolean)
       .map((a) => a.file);
+    if (d.video) files.push(d.video);
     if (g?.image) files.push(g.image);
     if (g?.backFile) files.push(g.backFile);
     if (g?.id === "memory") {

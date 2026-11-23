@@ -5,6 +5,7 @@ import { useProgress } from "@/lib/progress";
 import chars from "@/content/characters.json";
 import { Character } from "./Character";
 import { Icon } from "./Icon";
+import { Finale } from "./Finale";
 function Dialogue({ lines, mirrored = false }: { lines: Line[]; mirrored?: boolean }) {
   return (
     <div className="dialogue">
@@ -63,7 +64,7 @@ export function Content({
         DECEMBER {String(entry.day).padStart(2, "0")}　/　
         {kindNames[entry.kind]}
       </div>
-      {book ? <PictureBook ctx={ctx} entry={entry} /> : <h1>{entry.title}</h1>}
+      {book ? <PictureBook ctx={ctx} entry={entry} /> : !("video" in entry) && <h1>{entry.title}</h1>}
       {entry.kind === "wallpaper" && (
         <div className="wallpapers">
           {entry.images.map((img) => (
@@ -82,7 +83,8 @@ export function Content({
           ))}
         </div>
       )}
-      {entry.kind === "special" && ("noteUrl" in entry ? (
+      {"video" in entry && <Finale ctx={ctx} entry={entry} />}
+      {entry.kind === "special" && !("video" in entry) && ("noteUrl" in entry ? (
         <><p>ノクトとルクスのクリスマス4コマをnoteでお届けします。</p>
           {entry.noteUrl ? <a className="action green" href={entry.noteUrl}>noteで4コマを読む</a> : <p>記事の公開をお楽しみに。</p>}</>
       ) : <p>準備中です。</p>)}

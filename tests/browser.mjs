@@ -221,8 +221,9 @@ try {
     });
     assert.ok(headingFits, name + " title fits inside the frame");
     await p.getByRole("link", { name: "今日のプレゼントを開ける" }).click();
-    await p.getByRole("heading", { name: "クリスマスパーティー" }).waitFor();
-    await p.getByText("準備中です。", { exact: true }).waitFor();
+    await p.getByRole("heading", { name: "クリスマスパーティーへようこそ！" }).waitFor();
+    await p.getByRole("button", { name: "動画をスキップ" }).click();
+    await p.getByRole("link", { name: "記念イラストを保存する" }).waitFor();
     assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     await p.waitForFunction(() =>
       JSON.parse(

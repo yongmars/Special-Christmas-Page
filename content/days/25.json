@@ -3,20 +3,9 @@
   "kind": "special",
   "title": "クリスマスパーティー",
   "releaseDate": "2026-12-25",
-  "status": "pending",
-  "body": "窓の外に、白い雪がふわりと舞いました。",
-  "lines": [
-    {
-      "who": "noct",
-      "text": "今夜は雪がきれいだね。"
-    },
-    {
-      "who": "lux",
-      "text": "うん、一緒に行こう。"
-    }
-  ],
+  "video": "christmas-party.mp4",
   "image": {
-    "file": "scene.svg",
-    "alt": "仮の絵柄：雪の丘と小さな家"
+    "file": "merry-christmas-2026.png",
+    "alt": "ノクト、ルクス、ゆうまるす、朔がツリーの前に集まったクリスマスパーティーの記念イラスト。Merry Christmas!"
   }
 }

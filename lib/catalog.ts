@@ -47,6 +47,7 @@ export async function context(
 }
 export function artFiles(day: Day, preview: boolean): string[] {
   if (day.kind === "wallpaper") return day.images.map((i) => i.file);
+  if ("video" in day) return [day.video, day.image.file];
   if ("image" in day) return [day.image.file];
   if (day.kind === "game") {
     const g = games.find((g) => g.id === day.gameId)!;
