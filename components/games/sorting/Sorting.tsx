@@ -1,16 +1,15 @@
 import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from "react";
 import { Link } from "@/lib/navigation";
+import { giftWrapping } from "@/lib/gift-wrapping";
 import { publicPath } from "@/lib/public-path";
 import { bins, comboPoints, crossingTime, emptyScore, makeSortingRound, rank, scoreItem, type BinId, type Outcome, type SortingScore } from "@/lib/sorting";
 import { url, type Context, type Game } from "@/lib/types";
-import { Character } from "../../Character";
 import { Icon } from "../../Icon";
-import { ItemArt } from "./SortingArt";
+import { ItemArt, itemImagePaths, workshopPath } from "./SortingArt";
+import { GiftParcel } from "../GiftParcel";
 import "./sorting.css";
 
-function Parcel() {
-  return <span className="sort-parcel" aria-hidden="true"><i /></span>;
-}
+const gameImages = [workshopPath, ...itemImagePaths, ...Object.values(giftWrapping).map(wrap => wrap.image)];
 
 function Dialogue({ correct }: { correct?: number }) {
   let noct = "サンタさんのお手伝い、始めようか";
@@ -44,6 +43,7 @@ export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin:
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [paused, setPaused] = useState(false);
   const [selected, setSelected] = useState(false);
+  const [assetStatus, setAssetStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const frozen = useRef(false);
   const clock = useRef<PhaseClock | null>(null);
   const piece = useRef<HTMLButtonElement>(null);
@@ -90,7 +90,22 @@ export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin:
     };
   }, []);
 
-  function start() {
+  async function start() {
+    if (assetStatus === "loading") return;
+    if (assetStatus !== "ready") {
+      setAssetStatus("loading");
+      try {
+        await Promise.all(gameImages.map(path => {
+          const image = new Image();
+          image.src = publicPath(path);
+          return image.decode();
+        }));
+      } catch {
+        setAssetStatus("error");
+        return;
+      }
+      setAssetStatus("ready");
+    }
     frozen.current = false;
     setPaused(false);
     setIndex(0);
@@ -216,9 +231,7 @@ export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin:
         </div>
       </>}
       <div className="sort-stage" onDragStart={e => e.preventDefault()}>
-        <img className="sort-scenery" draggable={false} src={publicPath("/images/christmas/sorting-workshop.svg")} alt="" />
-        <div className="sort-cat sort-noct"><Character who="noct" mirrored /></div>
-        <div className="sort-cat sort-lux"><Character who="lux" /></div>
+        <img className="sort-scenery" draggable={false} src={publicPath(workshopPath)} width={1774} height={818} alt="" />
         {item ? <>
           <span className="sort-label" aria-live="polite">{item.name}</span>
           <div className="sort-track">
@@ -233,8 +246,8 @@ export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin:
           </div>
           <div className="sort-in-hand" ref={ghost} hidden aria-hidden="true"><ItemArt id={item.id} /></div>
         </> : <div className="sort-display">{done
-          ? <div className="sort-rank" role="img" aria-label={grade + "ランク"}><small>RANK</small>{grade}</div> : <Parcel />}</div>}
-        <div className="sort-belt" aria-hidden="true"><i /><span /></div>
+          ? <div className="sort-rank" role="img" aria-label={grade + "ランク"}><small>RANK</small>{grade}</div> : <GiftParcel category="plush" />}</div>}
+        <div className="sort-belt" aria-hidden="true" />
         {paused && <div className="sort-pause-cover">一時停止中</div>}
       </div>
       {item ? <>
@@ -251,7 +264,7 @@ export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin:
             onKeyDown={e => { if (e.repeat && (e.key === "Enter" || e.key === " ")) e.preventDefault(); }}
             className={"sort-box" + (outcome === "correct" && item.bin === bin.id ? " wrapping" : "")}>
             <span className="sort-bin-icon"><ItemArt id={bin.icon} /></span><strong>{bin.label}</strong>
-            {outcome === "correct" && item.bin === bin.id && <span className="sort-wrapped" aria-hidden="true"><Parcel /></span>}
+            {outcome === "correct" && item.bin === bin.id && <span className="sort-wrapped" aria-hidden="true"><GiftParcel category={item.bin} /></span>}
           </button>)}
         </div>
       </> : <div className="sort-welcome">
@@ -261,9 +274,10 @@ export function Sorting({ ctx, game, onWin }: { ctx: Context; game: Game; onWin:
         </>}
         <Dialogue correct={done ? stats.correct : undefined} />
         {!done && <p className="sort-tip">品物をつかんで箱に入れても遊べるよ。</p>}
-        <button type="button" className="action green sort-start" onClick={start}>
+        {assetStatus === "error" && <p className="sort-tip" role="alert">画像を読み込めませんでした。もう一度ボタンを押してください。</p>}
+        <button type="button" className="action green sort-start" onClick={start} disabled={assetStatus === "loading"}>
           <Icon name={done ? "game" : "gift"} size={20} />
-          {done ? "もう一度あそぶ" : ctx.preview ? "試遊する" : "あそぶ"}
+          {assetStatus === "loading" ? "画像を読み込み中…" : done ? "もう一度あそぶ" : ctx.preview ? "試遊する" : "あそぶ"}
         </button>
       </div>}
       <Link prefetch={false} className={done ? "sort-home action" : "sort-home backlink"} href={url(ctx)}>お部屋に戻る</Link>

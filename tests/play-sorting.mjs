@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 
-const correctBin = {
-  "クマのぬいぐるみ": "plush", "ウサギのぬいぐるみ": "plush", "ネコのぬいぐるみ": "plush",
-  "自動車": "vehicle", "電車": "vehicle", "飛行機": "vehicle",
-  "キャンディ": "sweet", "クッキー": "sweet", "チョコレート": "sweet",
+const expectedItems = {
+  "クマのぬいぐるみ": ["bear", "plush"], "ウサギのぬいぐるみ": ["rabbit", "plush"], "ネコのぬいぐるみ": ["cat", "plush"],
+  "自動車": ["car", "vehicle"], "電車": ["train", "vehicle"], "飛行機": ["plane", "vehicle"],
+  "キャンディ": ["candy", "sweet"], "クッキー": ["cookie", "sweet"], "チョコレート": ["chocolate", "sweet"],
 };
+
+const expectedMark = { plush: "paw", vehicle: "train", sweet: "candy" };
 
 async function stat(page, label) {
   return (await page.locator(".sort-stats div").filter({ has: page.getByText(label, { exact: true }) }).locator("dd").innerText()).trim();
@@ -42,9 +44,13 @@ export async function playSorting(page, touch, { wrong = [], timeout = [], deadl
     const piece = page.locator(".sort-piece");
     await page.waitForFunction(n => document.querySelector("progress")?.value === n, i + 1);
     const name = await page.locator(".sort-label").innerText();
-    const id = correctBin[name];
+    assert.ok(expectedItems[name], name);
+    const [itemFile, id] = expectedItems[name];
     names.add(name);
-    assert.ok(id);
+    assert.ok(await piece.locator("img").evaluate(async (img, file) => {
+      await img.decode();
+      return img.naturalWidth === 384 && img.src.endsWith("/sorting/" + file + ".webp");
+    }, itemFile));
     const duration = i < 5 ? 6000 : i < 10 ? 5000 : 4000;
     assert.equal(await piece.evaluate(el => el.getAnimations()[0].effect.getTiming().duration), duration);
     if (checkPause && i === 0) {
@@ -65,10 +71,18 @@ export async function playSorting(page, touch, { wrong = [], timeout = [], deadl
         const time = () => piece.evaluate(el => el.getAnimations()[0].currentTime);
         await piece.evaluate(el => el.getAnimations()[0].ready);
         const t = await time(), stoppedX = (await piece.boundingBox()).x;
+        const tread = page.locator(".sort-belt");
+        assert.ok(await tread.evaluate(el => {
+          const style = getComputedStyle(el);
+          return style.animationName === "none" || style.animationPlayState === "paused";
+        }));
+        const beltPosition = () => tread.evaluate(el => getComputedStyle(el).backgroundPositionX);
+        const stoppedTread = await beltPosition();
         await page.locator('[data-bin="' + id + '"]').evaluate(el => el.click());
         await page.waitForTimeout(automatic ? 6300 : 160);
         assert.equal(await time(), t);
         assert.equal((await piece.boundingBox()).x, stoppedX);
+        assert.equal(await beltPosition(), stoppedTread);
         assert.equal(await stat(page, "ミス"), "0");
         assert.equal(await stat(page, "正解"), "0");
         await resume.click();
@@ -102,6 +116,16 @@ export async function playSorting(page, touch, { wrong = [], timeout = [], deadl
     } else if (!touch && i === 2) await target.press("Enter");
     else if (touch) await target.tap();
     else await target.click();
+    const wrapped = page.locator(".sort-wrapped");
+    if (failed) assert.equal(await wrapped.count(), 0);
+    else {
+      const parcel = target.locator(".sort-wrapped .gift-parcel");
+      const appearance = await parcel.evaluate(async img => {
+        await img.decode();
+        return [img.dataset.wrapping, img.dataset.mark, img.src.split("/").at(-1), img.naturalWidth];
+      }, undefined, { timeout: 1000 });
+      assert.deepEqual(appearance, [id, expectedMark[id], id + ".webp", 384], name);
+    }
     if (failed) { misses++; combo = 0; }
     else {
       combo++;

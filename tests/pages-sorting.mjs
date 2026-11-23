@@ -48,7 +48,7 @@ try {
     { wrong: [0, 6], deadlineTap: [3], timeout: [14], checkPause: true }, // 11, no reward
     { wrong: [2, 7, 12] }, // 12, first reward
     { wrong: [4, 7, 9, 11] }, // subsequent loss
-    { wrong: [8] }, // subsequent win
+    { checkPause: true }, // subsequent perfect round, covers all nine successful wraps
   ];
   for (const [run, trial] of trials.entries()) {
     if (run >= 2) {
@@ -56,10 +56,13 @@ try {
       await page.emulateMedia({ reducedMotion: "no-preference" });
     }
     if (run) await page.goto(base + "/games/sorting/");
-    const scenery = page.locator(".sort-stage img");
-    await scenery.first().waitFor();
-    assert.ok(await scenery.evaluateAll(imgs => imgs.length === 3 &&
-      imgs.every(img => getComputedStyle(img).pointerEvents === "none")));
+    const scenery = page.locator(".sort-scenery");
+    await scenery.waitFor();
+    assert.ok(await scenery.evaluate(async img => {
+      await img.decode();
+      return img.naturalWidth === 1774 && img.naturalHeight === 818 &&
+        getComputedStyle(img).pointerEvents === "none";
+    }));
     if (run === 2) {
       const stage = page.locator(".sort-stage");
       await stage.evaluate(el => {
@@ -77,24 +80,51 @@ try {
     await page.locator(".sort-piece").waitFor();
     await page.locator(".sort-stage img").evaluateAll(imgs => Promise.all(imgs.map(img => img.decode())));
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    const track = await page.locator(".sort-track").boundingBox();
+    const tread = await page.locator(".sort-belt").boundingBox();
+    assert.ok(Math.abs(track.y + track.height - tread.y) < 1);
+    assert.ok(await page.locator(".sort-boxes").evaluate(el =>
+      el.getBoundingClientRect().bottom + scrollY <= innerHeight));
+    if (run >= 2) {
+      const belt = page.locator(".sort-belt");
+      const position = await belt.evaluate(el => getComputedStyle(el).backgroundPositionX);
+      await page.waitForFunction(previous =>
+        getComputedStyle(document.querySelector(".sort-belt")).backgroundPositionX !== previous, position);
+    }
     await page.screenshot({ path: path.join(os.tmpdir(), "christmas-sorting-" + (run >= 2 ? "desktop" : "mobile") + ".png"), fullPage: true });
     await playSorting(page, run < 2, trial);
     await page.getByRole("link", { name: "お部屋に戻る" }).tap();
     await page.locator(".room-scene").waitFor();
     if (run === 0) {
-      assert.equal(await page.locator(".room-cake,.reward-notice").count(), 0);
+      assert.equal(await page.locator(".room-cake,.cake-table,.reward-notice").count(), 0);
       continue;
     }
     await page.locator(".room-cake").waitFor();
     assert.equal(await page.locator(".room-cake").count(), 1);
+    const cakeImage = page.locator(".room-cake image.cake-table");
+    await cakeImage.evaluate(async el => {
+      const img = new Image();
+      img.src = el.href.baseVal;
+      await img.decode();
+    });
+    const table = await cakeImage.boundingBox();
+    const room = await page.locator(".room-scene").boundingBox();
+    const lux = await page.locator(".room-scene .cat.lux").boundingBox();
+    assert.ok(table.x >= lux.x + lux.width && table.x + table.width <= room.x + room.width);
+    assert.ok(table.y + table.height <= room.y + room.height);
+    if (run === 1 || run === 2) {
+      await page.locator(".room-scene").screenshot({ animations: "disabled",
+        path: path.join(os.tmpdir(), "christmas-cake-table-" + (run === 1 ? "mobile" : "desktop") + ".png") });
+    }
     if (run === 1) await page.locator(".reward-notice").getByText("ケーキだ！ ねえ、ちょっと味見しちゃダメ？").waitFor();
     else assert.equal(await page.locator(".reward-notice").count(), 0);
     await page.reload();
     await page.locator(".room-cake").waitFor();
+    assert.equal(await page.locator(".cake-table").count(), 1);
     assert.equal(await page.locator(".reward-notice").count(), 0);
   }
   assert.deepEqual(errors, []);
-  console.log("Pages: JST release, 320px taps, desktop clicks, pause, timeout, scores, ranks and persistent cake passed.");
+  console.log("Pages: JST release, illustrated belt and nine items, three wraps, touch and desktop controls, pause, timeout, ranks and persistent cake passed.");
 } finally {
   await browser?.close();
   server.close();

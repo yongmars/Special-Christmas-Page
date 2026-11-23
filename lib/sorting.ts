@@ -11,6 +11,8 @@ const items = {
   sweet: [["candy", "キャンディ"], ["cookie", "クッキー"], ["chocolate", "チョコレート"]],
 } as const;
 
+export type SortingItemId = (typeof items)[BinId][number][0];
+
 function shuffled<T>(values: readonly T[]): T[] {
   const copy = [...values];
   for (let end = copy.length - 1; end > 0; end--) {

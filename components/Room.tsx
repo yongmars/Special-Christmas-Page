@@ -51,17 +51,20 @@ export function Room({ decorations, arriving }: { decorations: string[]; arrivin
         {has("presents") && <g className="new-present"><title>ツリーの下に並んだプレゼント</title>
           {[[642,683,1.35,"#963c37"],[711,699,1.1,"#dec89d"],[882,679,1.4,"#547755"],[955,700,1.05,"#b84839"],[657,725,.95,"#466956"],[751,721,1.3,"#af4742"],[837,734,1.05,"#e6c88f"],[913,735,.83,"#577d69"]].map(([x,y,k,color])=><use key={x} href="#parcel" transform={"translate("+x+" "+y+") scale("+k+")"} color={String(color)}/>)}
         </g>}
-        {has("cake") && <g className="room-cake" transform="translate(130 687)"><title>テーブルのホールショートケーキ</title>
-          <ellipse cy="25" rx="96" ry="17" fill="#b88c52" stroke="#e9ce99" strokeWidth="4"/>
-          <path d="M-81 -6v24c1 19 160 19 162 0V-6" fill="#e4b37f" stroke="#955f41" strokeWidth="2"/>
-          <path d="M-81 1Q0 26 81 1v8Q0 35 -81 9Z" fill="#fbebe0"/><ellipse cy="-7" rx="82" ry="19" fill="#fff5dd" stroke="#d0a880" strokeWidth="2"/>
-          {[-58,-31,0,31,58].map((x,i)=><g transform={"translate("+x+" "+(i%2?-17:-9)+")"} key={x}><path d="M-12 -5Q-11 -23 0 -18Q14 -24 13 -5Q5 13 -1 12Q-10 7 -12 -5" fill="#ce4134" stroke="#a53529"/><path d="m0 -16 -9 -7 7 1 2 -6 2 6 8 -2 -6 7Z" fill="#507448"/><path d="m-6 -8 -1 3m10 -4 -1 3m-3 3 -1 3" stroke="#ffe18e" strokeWidth="2"/></g>)}
-          <g transform="translate(3 -7) rotate(-5)">
-            <rect x="-25" y="-7" width="56" height="15" rx="5" fill="#643c2f" stroke="#cfac76" />
-            <text x="3" y="3" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="9" fill="#fff1cc">Noël</text>
-            <path d="M23 -7q-7 -3 -9 -16l6 3 1 -5 4 8 4 -4 -2 13M24 -7q6 -12 17 -12l-2 5 5 1 -7 4 3 2 -14 4Z" fill="#3b6547" stroke="#284a34" />
-            <circle cx="24" cy="-7" r="3" fill="#b83428"/><circle cx="28" cy="-5" r="3" fill="#df4f39"/>
+        {has("cake") && <g className="room-cake">
+          <title>お部屋の右側の丸テーブルといちごのクリスマスケーキ</title>
+          <defs>
+            <filter id="cake-contact-shadow" x="-30%" y="-100%" width="160%" height="300%">
+              <feGaussianBlur stdDeviation="3" />
+            </filter>
+          </defs>
+          <g fill="#482717" opacity=".42" filter="url(#cake-contact-shadow)" aria-hidden="true">
+            <ellipse cx="1418" cy="878" rx="21" ry="5" />
+            <ellipse cx="1597" cy="878" rx="21" ry="5" />
+            <ellipse cx="1447" cy="845" rx="15" ry="4" />
+            <ellipse cx="1568" cy="845" rx="15" ry="4" />
           </g>
+          <image className="cake-table" href={publicPath("/images/christmas/cake-table.webp")} x="1372" y="624" width="274" height="274" />
         </g>}
       </svg>
       <div className="cat noct"><Character who="noct" mirrored /></div>
