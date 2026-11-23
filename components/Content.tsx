@@ -5,13 +5,13 @@ import { useProgress } from "@/lib/progress";
 import chars from "@/content/characters.json";
 import { Character } from "./Character";
 import { Icon } from "./Icon";
-function Dialogue({ lines }: { lines: Line[] }) {
+function Dialogue({ lines, mirrored = false }: { lines: Line[]; mirrored?: boolean }) {
   return (
     <div className="dialogue">
       {lines.map((line, i) => (
         <div key={i} className={"speech " + line.who}>
           <span className={"avatar " + line.who}>
-            <Character who={line.who} />
+            <Character who={line.who} mirrored={mirrored} />
           </span>
           <div>
             <b>{chars[line.who].name}</b>
@@ -102,7 +102,7 @@ export function Content({
           {choice !== null && (
             <div className={"answer " + (choice === entry.answer ? "success" : "")} role="status">
               <strong>{choice === entry.answer ? "正解！" : "おしい！"}</strong>
-              <Dialogue lines={[{who: entry.who, text: choice === entry.answer ? entry.correct : entry.incorrect}]} />
+              <Dialogue mirrored lines={[{who: entry.who, text: choice === entry.answer ? entry.correct : entry.incorrect}]} />
               <h3>豆知識</h3><p>{entry.explanation}</p>
               <button onClick={() => progress.retryQuiz(entry.id)}>もう一度</button>
             </div>

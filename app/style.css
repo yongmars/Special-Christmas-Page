@@ -266,9 +266,61 @@ nav a[aria-current]:after {
 .cat.noct { left: 20%; }
 .cat.lux { right: 17%; }
 .character { display: block; width: 100%; height: 100%; object-fit: contain; }
-.reward-notice { margin: 12px 0; padding: 16px 22px; background: #fff8e8; border: 1px solid #c3a367; border-radius: 10px; }
-.reward-notice strong { color: #315747; }
-.reward-notice button { margin-top: 8px; }
+.room-panel { align-self: center; width: 100%; min-width: 0; }
+.reward-notice {
+  --bubble: #f2fbf5;
+  --edge: #649478;
+  --tail: 32%;
+  position: relative;
+  margin: 0 13% 15px 12px;
+  z-index: 4;
+  color: #223d34;
+}
+.reward-notice.lux {
+  --bubble: #fff5e6;
+  --edge: #c47737;
+  --tail: 74%;
+  margin: 0 12px 15px 13%;
+  color: #50301d;
+}
+.reward-notice button {
+  position: relative;
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  padding: 9px 13px;
+  border: 2px solid var(--edge);
+  border-radius: 12px;
+  background: var(--bubble);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.reward-notice button::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: var(--tail);
+  width: 12px;
+  height: 12px;
+  transform: rotate(45deg);
+  border-top: 2px solid var(--edge);
+  border-left: 2px solid var(--edge);
+  background: var(--bubble);
+}
+.reward-notice small { justify-self: end; text-decoration: underline; }
+@media (prefers-reduced-motion: no-preference) {
+  .room-rewards[data-arriving="wreath"] .wreath,
+  .room-rewards[data-arriving="lights"] .lights,
+  .room-rewards[data-arriving="presents"] .new-present,
+  .room-rewards[data-arriving="cake"] .room-cake,
+  .room-rewards[data-arriving="village-lights"] .village-house {
+    animation: room-decoration-arrive .45s ease-out both;
+  }
+  .room-rewards[data-arriving="village-lights"] .village-house + .village-house {
+    animation-delay: .24s;
+  }
+  @keyframes room-decoration-arrive { from { opacity: 0; } }
+}
 .corner {
   position: absolute;
   z-index: 4;

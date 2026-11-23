@@ -1,7 +1,6 @@
 {
   "day": 6,
-  "kind": "special",
-  "title": "クリスマス4コマ",
-  "releaseDate": "2026-12-06",
-  "noteUrl": ""
+  "kind": "game",
+  "title": "ジグソーパズル",
+  "gameId": "jigsaw"
 }

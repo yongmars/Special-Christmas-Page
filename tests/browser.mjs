@@ -242,7 +242,7 @@ try {
       await full.waitFor({ state: "hidden" });
       assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     }
-    for (const [day, correct] of [[4,0],[9,1],[15,2],[21,1]]) {
+    for (const [day, correct] of [[4,0],[9,1],[15,2],[17,1]]) {
       const quiz = JSON.parse(await readFile("content/days/" + String(day).padStart(2,"0") + ".json","utf8"));
       await p.goto(url("/calendar/" + day));
       await p.getByText(quiz.question,{exact:true}).waitFor();
@@ -286,23 +286,43 @@ try {
     }
     await p.getByRole("link", { name: "お部屋にもどる", exact: true }).click();
     await p.locator(".room-scene").waitFor();
-    await p.getByText(/わあ、ツリーが光った/).waitFor();
-    await p.getByRole("button",{name:"次のメッセージ"}).click();
-    await p.getByText(/リースも飾れたね/).waitFor();
+    const reward = p.locator(".reward-notice");
+    const checkReward = async (id, who, line, decoration, animation) => {
+      await p.locator(decoration).waitFor();
+      await reward.filter({hasText:line}).waitFor();
+      assert.equal(await reward.getAttribute("class"), "reward-notice " + who);
+      assert.equal(await p.locator(".room-rewards").getAttribute("data-arriving"), animation);
+      assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+      const bounds = await reward.boundingBox();
+      const bar = await p.locator(".present-bar").boundingBox();
+      assert.ok(bounds.y + bounds.height <= bar.y, id);
+    };
+    await checkReward("memory", "noct", "リースが飾られたね。クリスマスらしくなってきたな", ".wreath", "wreath");
+    await reward.getByRole("button").click();
+    await checkReward("slide", "noct", "プレゼントも並んだね。喜んでくれるかな？", ".new-present", "presents");
     await p.reload();
-    await p.getByText(/プレゼントも並んだね/).waitFor();
+    await checkReward("jigsaw", "lux", "わあっ！ ツリーがキラキラ！ きれいだね！", ".lights", "lights");
     await p.reload();
-    assert.equal(await p.locator(".reward-notice").count(), 0);
+    assert.equal(await reward.count(), 0);
     for (const selector of [".lights", ".wreath", ".new-present"])
       await p.locator(selector).waitFor();
     await p.locator("summary").click();
-    for (const [game,selector] of [["プレゼント仕分け",".room-cake"],["プレゼント配達",".window-lights"]]) {
-      await p.getByRole("checkbox",{name:game}).check();
-      await p.locator(selector).waitFor();
-    }
+    await p.getByRole("checkbox",{name:"プレゼント仕分け"}).check();
+    await checkReward("sorting", "lux", "ケーキだ！ ねえ、ちょっと味見しちゃダメ？", ".room-cake", "cake");
+    await reward.getByRole("button").click();
+    await p.getByRole("checkbox",{name:"プレゼント配達"}).check();
+    await checkReward("delivery", "noct", "みんなにプレゼントも届いたし……", ".window-lights", "village-lights");
+    await reward.getByRole("button").click();
+    await checkReward("delivery", "lux", "これでクリスマスの準備は完璧だね！", ".window-lights", "village-lights");
+    await reward.getByRole("button").click();
+    await p.reload();
+    await p.locator(".room-cake").waitFor();
+    await p.locator(".window-lights").waitFor();
+    assert.equal(await reward.count(), 0);
+    await p.locator("summary").click();
     await p.getByRole("button", { name: "プレビュー記録をリセット" }).click();
     assert.equal(
-      await p.locator(".wreath,.lights,.new-present,.door.opened").count(),
+      await p.locator(".wreath,.lights,.new-present,.room-cake,.window-lights,.door.opened").count(),
       0,
     );
     await ctx.close();
@@ -311,7 +331,8 @@ try {
   await legacy.goto(url());
   await legacy.evaluate(() => localStorage.setItem("noct-lux:christmas-2026:v1:preview",JSON.stringify({opened:[1,7],clears:["memory"],slideBest:{"3":5}})));
   await legacy.reload();
-  await legacy.locator(".lights").waitFor();
+  await legacy.locator(".wreath").waitFor();
+  assert.equal(await legacy.locator(".lights").count(),0);
   assert.equal(await legacy.locator(".reward-notice").count(),0);
   assert.equal(await legacy.locator(".door.opened").count(),2);
   await legacy.goto(url("/games/slide"));
@@ -340,9 +361,9 @@ try {
     await p.locator(".content-card h1").waitFor();
     assert.ok(await p.locator(".content-card img").evaluateAll(async imgs => {await Promise.all(imgs.map(img => img.decode()));return imgs.every(img => img.naturalWidth>0)}));
   }
-  await p.goto(url("/games/jigsaw","2026-12-12"));
+  await p.goto(url("/games/jigsaw","2026-12-05"));
   assert.equal(await p.getByRole("button",{name:"試遊する"}).count(),0);
-  await p.locator("summary").click();await p.locator('input[type="date"]').fill("2026-12-13");
+  await p.locator("summary").click();await p.locator('input[type="date"]').fill("2026-12-06");
   await p.getByRole("button",{name:"日付を適用"}).click();await p.getByRole("button",{name:"試遊する"}).waitFor();
   await p.close();
   console.log("Dates, downloads, progress, touch controls: OK");

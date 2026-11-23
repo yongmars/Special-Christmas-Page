@@ -1,12 +1,17 @@
 import { Character } from "./Character";
 import { publicPath } from "@/lib/public-path";
 
-export function Room({ decorations }: { decorations: string[] }) {
+const villageWindows = [
+  [[283,491],[296,491],[318,490],[332,490]],
+  [[405,419],[430,419],[455,419],[405,437],[430,437],[455,437]],
+];
+
+export function Room({ decorations, arriving }: { decorations: string[]; arriving?: string }) {
   const has = (id: string) => decorations.includes(id);
   return (
     <div className="room-scene" role="group" aria-label="雪の窓と暖炉のあるクリスマスのお部屋">
       <img className="room-bg" src={publicPath("/images/christmas/living-room.webp")} alt="星を飾ったツリーと暖炉。窓の向こうに雪の街が見えます。" />
-      <svg className="room-rewards" viewBox="0 0 1649 954" aria-label="ゲームで増えたお部屋の飾り" role="img">
+      <svg className="room-rewards" data-arriving={arriving} viewBox="0 0 1649 954" aria-label="ゲームで増えたお部屋の飾り" role="img">
         <defs>
           <radialGradient id="lamp"><stop stopColor="#fffbe0"/><stop offset=".23" stopColor="#fff1ac"/><stop offset=".5" stopColor="#ffc456" stopOpacity=".7"/><stop offset="1" stopColor="#ffb431" stopOpacity="0"/></radialGradient>
           <linearGradient id="pine"><stop stopColor="#254730"/><stop offset=".6" stopColor="#548153"/><stop offset="1" stopColor="#a4ad67"/></linearGradient>
@@ -19,9 +24,17 @@ export function Room({ decorations }: { decorations: string[] }) {
             <path d="M32 1Q3 -24 12 -21Q26 -25 32 1Q47 -24 52 -18Q55 -7 32 1Z" fill="url(#ribbon)"/>
           </g>
         </defs>
-        {has("windows") && <g className="window-lights"><title>窓の外の家々に灯った明かり</title>
-          {[[283,491],[296,491],[318,490],[332,490],[405,419],[430,419],[455,419],[405,437],[430,437],[455,437]].map(([x,y]) =>
-            <g key={x+"-"+y}><circle cx={x} cy={y} r="13" fill="url(#lamp)"/><rect x={x-2} y={y-3} width="4" height="6" rx="1" fill="#ffdd87"/></g>)}
+        {has("village-lights") && <g className="window-lights"><title>窓の外の家々に灯った明かり</title>
+          {villageWindows.map((house, index) => (
+            <g className="village-house" key={index}>
+              {house.map(([x,y]) => (
+                <g key={x+"-"+y}>
+                  <circle cx={x} cy={y} r="13" fill="url(#lamp)" />
+                  <rect x={x-2} y={y-3} width="4" height="6" rx="1" fill="#ffdd87" />
+                </g>
+              ))}
+            </g>
+          ))}
         </g>}
         {has("lights") && <g className="lights"><title>点灯したツリーのライト</title>
           {[[812,185],[843,201],[872,207],[781,244],[807,261],[844,272],[879,270],[911,258],[748,322],[782,345],[825,357],[873,356],[915,345],[959,327],[711,408],[747,431],[803,449],[854,455],[910,449],[964,432],[995,413],[666,512],[710,541],[771,563],[844,574],[913,569],[982,548],[1030,524],[644,601],[692,619],[752,633],[834,640],[907,637],[978,627],[1035,615]].map(([x,y]) =>
@@ -47,7 +60,7 @@ export function Room({ decorations }: { decorations: string[] }) {
           {[-58,-31,0,31,58].map((x,i)=><g transform={"translate("+x+" "+(i%2?-17:-9)+")"} key={x}><path d="M-12 -5Q-11 -23 0 -18Q14 -24 13 -5Q5 13 -1 12Q-10 7 -12 -5" fill="#ce4134" stroke="#a53529"/><path d="m0 -16 -9 -7 7 1 2 -6 2 6 8 -2 -6 7Z" fill="#507448"/><path d="m-6 -8 -1 3m10 -4 -1 3m-3 3 -1 3" stroke="#ffe18e" strokeWidth="2"/></g>)}
         </g>}
       </svg>
-      <div className="cat noct"><Character who="noct" /></div>
+      <div className="cat noct"><Character who="noct" mirrored /></div>
       <div className="cat lux"><Character who="lux" /></div>
     </div>
   );

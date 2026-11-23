@@ -11,6 +11,7 @@ import { Games, GameDetail } from "./Games";
 import { Content } from "./Content";
 import { Preview } from "./Preview";
 import { Icon } from "./Icon";
+import characters from "@/content/characters.json";
 function Brand() {
   return (
     <span className="brand">
@@ -23,27 +24,26 @@ function Brand() {
     </span>
   );
 }
-function RewardNotice({ games, preview }: { games: Game[]; preview: boolean }) {
-  const progress = useProgress(preview);
+function Home({ ctx, decorations, games }: { ctx: Context; decorations: string[]; games: Game[] }) {
+  const s = season(ctx.date);
+  const progress = useProgress(ctx.preview);
   const [current, setCurrent] = useState<Game | null>(null);
+  const [lineIndex, setLineIndex] = useState(0);
   const next = progress.state.pendingRewards[0];
+  const line = current?.decoration.lines[lineIndex];
+  const hasNextLine = current != null && lineIndex + 1 < current.decoration.lines.length;
   useEffect(() => {
     if (current && !progress.state.clears.includes(current.id)) setCurrent(null);
     else if (!current && next) {
+      setLineIndex(0);
       setCurrent(games.find(g => g.id === next) ?? null);
       progress.readReward(next);
     }
   }, [current, next, progress.state.clears, games]);
-  return current ? (
-    <aside className="reward-notice" aria-live="polite">
-      <strong>{current.decoration.label}</strong>
-      {current.decoration.lines.map(line => <p key={line.who}>{line.who === "noct" ? "ノクト" : "ルクス"}「{line.text}」</p>)}
-      <button onClick={() => setCurrent(null)}>{next ? "次のメッセージ" : "閉じる"}</button>
-    </aside>
-  ) : null;
-}
-function Home({ ctx, decorations, games }: { ctx: Context; decorations: string[]; games: Game[] }) {
-  const s = season(ctx.date);
+  function advanceReward() {
+    if (hasNextLine) setLineIndex(lineIndex + 1);
+    else setCurrent(null);
+  }
   return (
     <>
       <div className="hero">
@@ -68,13 +68,23 @@ function Home({ ctx, decorations, games }: { ctx: Context; decorations: string[]
             <Icon name="calendar" size={15} /> 2026.12.01 <i>—</i> 12.25
           </span>
         </div>
-        <Room decorations={decorations} />
+        <div className="room-panel">
+          <Room decorations={decorations} arriving={current?.decoration.id} />
+          {line && (
+            <aside className={"reward-notice " + line.who} aria-live="polite">
+              <button type="button" onClick={advanceReward}>
+                <strong>{characters[line.who].name}</strong>
+                <span>{line.text}</span>
+                <small>{hasNextLine || next ? "次のメッセージ" : "閉じる"}</small>
+              </button>
+            </aside>
+          )}
+        </div>
         <i className="corner tl" />
         <i className="corner tr" />
         <i className="corner bl" />
         <i className="corner br" />
       </div>
-      <RewardNotice games={games} preview={ctx.preview} />
       <div className="present-bar">
         <div className="countdown">
           <span className="date-stamp">

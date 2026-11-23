@@ -1,4 +1,12 @@
 {
-  "noct": { "name": "ノクト", "image": "/images/christmas/noct.webp" },
-  "lux": { "name": "ルクス", "image": "/images/christmas/lux.webp" }
+  "noct": {
+    "name": "ノクト",
+    "image": "/images/christmas/noct.webp",
+    "mirroredImage": "/images/christmas/noct-right.webp"
+  },
+  "lux": {
+    "name": "ルクス",
+    "image": "/images/christmas/lux.webp",
+    "mirroredImage": "/images/christmas/lux-right.webp"
+  }
 }

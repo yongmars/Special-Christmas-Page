@@ -68,14 +68,17 @@ if (process.argv[2] === "serve") {
     assert.equal(await p.locator("a.door").count(), 1);
     assert.equal((await get("/art/1/winter-night.png")).status, 200);
     for (const [day, id] of [
-      [3, "memory"], [10, "slide"], [13, "jigsaw"], [17, "sorting"], [20, "delivery"],
+      [3, "memory"], [6, "jigsaw"], [10, "slide"], [13, "sorting"], [21, "delivery"],
     ]) {
       await clock("2026-12-" + String(day - 1).padStart(2, "0") + "T23:59:55");
       assert.match(await body("/games/" + id), /に公開します/);
       await clock("2026-12-" + String(day).padStart(2, "0") + "T00:00:00");
-      assert.match(await body("/games/" + id), day < 17 ? /あそぶ/ : /準備中です/);
+      assert.match(await body("/games/" + id), day < 13 ? /あそぶ/ : /準備中です/);
       assert.match(await body("/calendar/" + day), /ゲームの入口へ/);
     }
+    assert.match(await body("/calendar/20"), /クリスマス4コマ/);
+    assert.doesNotMatch(await body("/calendar/20"), /ゲームの入口へ/);
+    assert.equal((await get("/art/6/christmas-market.webp")).status,200);
     await clock("2027-01-01T00:00:00");
     await p.goto(base);
     assert.equal(await p.locator("a.door").count(), 25);

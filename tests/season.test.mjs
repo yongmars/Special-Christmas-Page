@@ -4,7 +4,7 @@ import { readFile, access } from "node:fs/promises";
 import { tokyoDate, validDate, season, nextMidnight } from "../lib/season.ts";
 import { neighbors, shuffle, solved } from "../lib/slide.ts";
 test("日本時間の0時に切り替わり、開催前・25日・終了後・翌年を区別する", () => {
-  for (const day of [1, 3, 10, 13, 17, 20, 25, 26]) {
+  for (const day of [1, 3, 6, 10, 13, 20, 21, 25, 26]) {
     const expected = "2026-12-" + String(day).padStart(2, "0"),
       t = Date.parse(expected + "T00:00:00+09:00");
     assert.equal(tokyoDate(t), expected);
@@ -63,9 +63,9 @@ test("スライドのシャッフルは合法な移動を使い、未完成・�
 
 test("確定日程のシリーズ・話数・ゲーム・クイズを照合する", async () => {
   const expected = [
-    "wallpaper", "lux1", "memory", "stocking", "lux2", "special", "gallery1", "lux3", "nicholas",
-    "slide", "lux4", "gallery2", "jigsaw", "noct1", "antlers", "noct2", "sorting",
-    "gallery3", "noct3", "delivery", "holly", "noct4", "gallery4", "special", "special",
+    "wallpaper", "lux1", "memory", "stocking", "lux2", "jigsaw", "gallery1", "lux3", "nicholas",
+    "slide", "lux4", "gallery2", "sorting", "noct1", "antlers", "noct2", "holly",
+    "gallery3", "noct3", "special", "delivery", "noct4", "gallery4", "special", "special",
   ];
   for (const [index, key] of expected.entries()) {
     const day = JSON.parse(await readFile("content/days/" + String(index + 1).padStart(2, "0") + ".json", "utf8"));
@@ -79,4 +79,15 @@ test("確定日程のシリーズ・話数・ゲーム・クイズを照合す�
       assert.equal(day.who, [4, 15].includes(day.day) ? "lux" : "noct");
     }
   }
+});
+
+test("ゲーム順とクリア装飾の対応を確認", async () => {
+  const games = JSON.parse(await readFile("content/games.json", "utf8"));
+  assert.deepEqual(games.map(g => [g.id, g.releaseDate, g.decoration.id, g.decoration.lines.map(line => line.who)]), [
+    ["memory", "2026-12-03", "wreath", ["noct"]],
+    ["jigsaw", "2026-12-06", "lights", ["lux"]],
+    ["slide", "2026-12-10", "presents", ["noct"]],
+    ["sorting", "2026-12-13", "cake", ["lux"]],
+    ["delivery", "2026-12-21", "village-lights", ["noct", "lux"]],
+  ]);
 });

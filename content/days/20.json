@@ -1,6 +1,7 @@
 {
   "day": 20,
-  "kind": "game",
-  "title": "プレゼント配達",
-  "gameId": "delivery"
+  "kind": "special",
+  "title": "クリスマス4コマ",
+  "releaseDate": "2026-12-20",
+  "noteUrl": ""
 }
