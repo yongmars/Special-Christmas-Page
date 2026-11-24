@@ -1249,3 +1249,118 @@ html:has(.book-dialog[open]) { overflow: hidden; }
   }
   @keyframes finale-reveal { from { opacity: 0; } }
 }
+
+.christmas-eve {
+  max-width: 740px;
+  margin-inline: auto;
+}
+.eve-zoom-hint {
+  margin-block: 12px 9px;
+  color: #675540;
+  font-size: .875rem;
+}
+.eve-comic {
+  --gap: clamp(5px, 1.4vw, 10px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(var(--gap) / 2) var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.eve-panel:last-child { grid-column: 1 / -1; }
+.eve-art-button {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: #f8e8ce;
+}
+.eve-panel:last-child .eve-art-button { aspect-ratio: 2; }
+.eve-art-button img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: contain;
+}
+.eve-panel-sparkles,
+.eve-keepsake-lights {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.eve-panel-sparkles i,
+.eve-keepsake-lights i {
+  position: absolute;
+  width: clamp(4px, 1vw, 9px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fff0bd;
+  box-shadow: 0 0 10px #f7bf50;
+  opacity: 0;
+}
+.eve-panel:nth-child(2) i:nth-child(1) { left: 40%; top: 74%; }
+.eve-panel:nth-child(2) i:nth-child(2) { left: 49%; top: 68%; }
+.eve-panel:nth-child(2) i:nth-child(3) { left: 57%; top: 73%; }
+.eve-panel:nth-child(3) i {
+  width: clamp(6px, 1.35vw, 13px);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+}
+.eve-panel:nth-child(3) i:nth-child(1) { left: 7%; top: 64%; }
+.eve-panel:nth-child(3) i:nth-child(2) { right: 9%; top: 61%; }
+.eve-panel:nth-child(3) i:nth-child(3) { right: 6%; top: 77%; }
+.eve-keepsake {
+  position: relative;
+  max-width: 640px;
+  margin: clamp(26px, 6vw, 56px) auto 0;
+  padding: clamp(8px, 2vw, 17px);
+  border: 1px solid #c7a46e;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at bottom, #f2d4a0, #fff8e8 76%);
+  box-shadow: 0 8px 27px #bd772623;
+}
+.eve-keepsake-lights i:nth-child(1) { left: 11%; top: 2px; }
+.eve-keepsake-lights i:nth-child(2) { right: 2px; top: 31%; }
+.eve-keepsake-lights i:nth-child(3) { left: 2px; bottom: 23%; }
+.eve-keepsake-lights i:nth-child(4) { right: 15%; bottom: 2px; }
+.eve-message {
+  padding: 20px 0 10px;
+  color: #315246;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: clamp(.98rem, 2.6vw, 1.17rem);
+  line-height: 1.9;
+  text-align: center;
+}
+.eve-message p { white-space: pre-line; }
+.eve-message p + p { margin-top: 12px; }
+.eve-greeting {
+  color: #883b36;
+  font: italic 1.45em Georgia, serif;
+}
+.eve-dialog { width: min(96vw, 58rem); }
+.eve-dialog .book-scroll img { min-width: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .eve-panel { animation: eve-panel-in .42s ease-out both; }
+  .eve-panel:nth-child(2) { animation-delay: .25s; }
+  .eve-panel:nth-child(3) { animation: eve-panel-in .65s .56s ease-out both; }
+  .eve-panel:nth-child(2) i { animation: eve-sparkle .68s .51s ease-out both; }
+  .eve-panel:nth-child(3) i { animation: eve-sparkle .84s .91s ease-out both; }
+  .eve-keepsake[data-revealed="false"] .eve-art-button { opacity: 0; }
+  .eve-keepsake[data-revealed="true"] .eve-art-button { animation: eve-keepsake-in .95s ease-out both; }
+  .eve-keepsake[data-revealed="true"] i { animation: eve-sparkle 1.4s .35s ease-out 2 both; }
+  .eve-keepsake[data-revealed="true"] i:nth-child(even) { animation-delay: .7s; }
+  @keyframes eve-panel-in { from { opacity: 0; } }
+  @keyframes eve-keepsake-in {
+    from { opacity: 0; transform: scale(.985); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes eve-sparkle {
+    0%, 100% { opacity: 0; }
+    40% { opacity: .8; }
+    to { transform: translateY(-4px); }
+  }
+}

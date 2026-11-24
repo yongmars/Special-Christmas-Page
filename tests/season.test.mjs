@@ -4,7 +4,7 @@ import { readFile, access } from "node:fs/promises";
 import { tokyoDate, validDate, season, nextMidnight } from "../lib/season.ts";
 import { neighbors, shuffle, solved } from "../lib/slide.ts";
 test("日本時間の0時に切り替わり、開催前・25日・終了後・翌年を区別する", () => {
-  for (const day of [1, 3, 6, 10, 13, 20, 21, 25, 26]) {
+  for (const day of [1, 3, 6, 10, 13, 20, 21, 24, 25, 26]) {
     const expected = "2026-12-" + String(day).padStart(2, "0"),
       t = Date.parse(expected + "T00:00:00+09:00");
     assert.equal(tokyoDate(t), expected);
@@ -29,7 +29,7 @@ test("25日分の登録、画像、クイズ、ゲーム日付を検証", async 
     days.add(d.kind);
     const g = games.find((g) => g.id === d.gameId);
     assert.equal(g?.releaseDate ?? d.releaseDate, "2026-12-" + key);
-    const files = [d.image, ...(d.images || [])]
+    const files = [d.image, ...(d.images || []), ...(d.comic || []), d.epilogue]
       .filter(Boolean)
       .map((a) => a.file);
     if (d.video) files.push(d.video);

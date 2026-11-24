@@ -80,6 +80,12 @@ if (process.argv[2] === "serve") {
     assert.match(await body("/calendar/20"), /クリスマス4コマ/);
     assert.doesNotMatch(await body("/calendar/20"), /ゲームの入口へ/);
     assert.equal((await get("/art/6/christmas-market.webp")).status,200);
+    await clock("2026-12-23T23:00:00");
+    assert.doesNotMatch(await body("/calendar/24"), /ノクトとルクスのクリスマスプレゼント交換/);
+    assert.equal((await get("/art/24/matching-scarves.webp")).status, 404);
+    await clock("2026-12-24T00:00:00");
+    assert.match(await body("/calendar/24"), /ノクトとルクスのクリスマスプレゼント交換/);
+    assert.equal((await get("/art/24/matching-scarves.webp")).status, 200);
     const videoPath = "/art/25/christmas-party.mp4";
     const picturePath = "/art/25/merry-christmas-2026.png";
     await clock("2026-12-24T23:59:55");

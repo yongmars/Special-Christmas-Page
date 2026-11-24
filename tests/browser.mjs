@@ -244,6 +244,34 @@ try {
       await full.waitFor({ state: "hidden" });
       assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     }
+    await p.goto(url("/calendar/24", "2026-12-24"));
+    const comic = p.locator(".eve-comic");
+    const panels = comic.locator("button");
+    assert.equal(await panels.count(), 3);
+    const bounds = await comic.boundingBox();
+    assert.ok(Math.abs(bounds.width - bounds.height) < 2);
+    const pictures = await comic.locator("img").evaluateAll(async images => {
+      await Promise.all(images.map(img => img.decode()));
+      return images.map(img => img.naturalWidth / img.naturalHeight);
+    });
+    assert.deepEqual(pictures, [1, 1, 2]);
+    for (const i of [0, 1, 2]) {
+      await panels.nth(i).click();
+      const dialog = p.getByRole("dialog");
+      await dialog.waitFor();
+      assert.equal(await dialog.locator("img").getAttribute("src"), await panels.nth(i).locator("img").getAttribute("src"));
+      await dialog.getByRole("button", { name: "閉じる" }).click();
+      await dialog.waitFor({ state: "hidden" });
+    }
+    const keepsake = p.locator(".eve-keepsake");
+    await keepsake.scrollIntoViewIfNeeded();
+    await p.waitForFunction(() => document.querySelector(".eve-keepsake")?.dataset.revealed === "true");
+    assert.equal(await keepsake.locator("img").evaluate(async img => {
+      await img.decode();
+      return img.naturalWidth / img.naturalHeight;
+    }), 1);
+    await p.getByText("Merry Christmas Eve!", { exact: true }).waitFor();
+    assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     for (const [day, correct] of [[4,0],[9,1],[15,2],[17,1]]) {
       const quiz = JSON.parse(await readFile("content/days/" + String(day).padStart(2,"0") + ".json","utf8"));
       await p.goto(url("/calendar/" + day));

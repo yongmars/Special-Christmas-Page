@@ -14,6 +14,7 @@ export type Day = Base &
         series: Who | "gallery"; episode: number; paragraphs: string[]; image: Art;
       }
     | { kind: "special"; noteUrl: string }
+    | { kind: "special"; comic: [Art, Art, Art]; epilogue: Art; message: string[]; greeting: string }
     | { kind: "special"; video: string; image: Art }
     | {
         kind: "special"; status: "pending";

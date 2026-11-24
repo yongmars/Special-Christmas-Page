@@ -6,6 +6,7 @@ import chars from "@/content/characters.json";
 import { Character } from "./Character";
 import { Icon } from "./Icon";
 import { Finale } from "./Finale";
+import { ChristmasEve } from "./ChristmasEve";
 function Dialogue({ lines, mirrored = false }: { lines: Line[]; mirrored?: boolean }) {
   return (
     <div className="dialogue">
@@ -84,7 +85,8 @@ export function Content({
         </div>
       )}
       {"video" in entry && <Finale ctx={ctx} entry={entry} />}
-      {entry.kind === "special" && !("video" in entry) && ("noteUrl" in entry ? (
+      {"comic" in entry && <ChristmasEve ctx={ctx} entry={entry} />}
+      {entry.kind === "special" && !("video" in entry) && !("comic" in entry) && ("noteUrl" in entry ? (
         <><p>ノクトとルクスのクリスマス4コマをnoteでお届けします。</p>
           {entry.noteUrl ? <a className="action green" href={entry.noteUrl}>noteで4コマを読む</a> : <p>記事の公開をお楽しみに。</p>}</>
       ) : <p>準備中です。</p>)}

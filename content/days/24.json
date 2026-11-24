@@ -1,22 +1,29 @@
 {
   "day": 24,
   "kind": "special",
-  "title": "ノクトとルクスのプレゼント交換",
+  "title": "ノクトとルクスのクリスマスプレゼント交換",
   "releaseDate": "2026-12-24",
-  "status": "pending",
-  "body": "窓の外に、白い雪がふわりと舞いました。",
-  "lines": [
+  "comic": [
     {
-      "who": "noct",
-      "text": "今夜は雪がきれいだね。"
+      "file": "exchange.webp",
+      "alt": "ルクス「ノクト、はいどうぞ！」 ノクト「ありがとう。僕からも」"
     },
     {
-      "who": "lux",
-      "text": "うん、一緒に行こう。"
+      "file": "unwrapping.webp",
+      "alt": "ルクス「開けてみようよ！」 ノクト「うん」"
+    },
+    {
+      "file": "matching-scarves.webp",
+      "alt": "ノクト「あ、マフラーだ」 ルクス「えっ！ こっちもマフラーだよ！」 ふたり「一緒だね〜」"
     }
   ],
-  "image": {
-    "file": "scene.svg",
-    "alt": "仮の絵柄：雪の丘と小さな家"
-  }
+  "epilogue": {
+    "file": "christmas-eve.webp",
+    "alt": "もらったマフラーを巻き、顔を見合わせて笑うノクトとルクス。"
+  },
+  "message": [
+    "相手のことを想って選んだプレゼント。\n偶然にも、二人ともマフラーでした。",
+    "首もとだけじゃなく、心まであったかくなる\nクリスマスイブ。"
+  ],
+  "greeting": "Merry Christmas Eve!"
 }
