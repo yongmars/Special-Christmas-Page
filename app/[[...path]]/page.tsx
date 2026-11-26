@@ -1,7 +1,24 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { calendarSocial } from "@/lib/calendar-social.mjs";
 import { context, games, readDay } from "@/lib/catalog";
 import { Site } from "@/components/Site";
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ path?: string[] }>;
+}): Promise<Metadata> {
+  const { path } = await params;
+  if (path?.length !== 1 || path[0] !== "calendar") return {};
+
+  const { title, description, url, image, type, card } = calendarSocial;
+  return {
+    openGraph: { title, description, url, images: [image], type },
+    twitter: { card, title, description, images: [image] },
+  };
+}
 export default async function Page({
   params,
   searchParams,
