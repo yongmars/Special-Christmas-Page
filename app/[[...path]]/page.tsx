@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { calendarSocial } from "@/lib/calendar-social.mjs";
+import { calendarSocial, homeSocialUrl } from "@/lib/calendar-social.mjs";
 import { context, games, readDay } from "@/lib/catalog";
 import { Site } from "@/components/Site";
 export const dynamic = "force-dynamic";
@@ -11,11 +11,11 @@ export async function generateMetadata({
   params: Promise<{ path?: string[] }>;
 }): Promise<Metadata> {
   const { path } = await params;
-  if (path?.length !== 1 || path[0] !== "calendar") return {};
+  if (path?.length && (path.length !== 1 || path[0] !== "calendar")) return {};
 
   const { title, description, url, image, type, card } = calendarSocial;
   return {
-    openGraph: { title, description, url, images: [image], type },
+    openGraph: { title, description, url: path?.length ? url : homeSocialUrl, images: [image], type },
     twitter: { card, title, description, images: [image] },
   };
 }
