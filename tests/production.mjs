@@ -106,20 +106,22 @@ if (process.argv[2] === "serve") {
     assert.ok(await video.evaluate(el => el.paused && !el.muted && el.currentTime === 0 && el.duration > 9));
     await p.evaluate(() => {
       new MutationObserver(() => {
-        if (document.querySelector(".finale-flash")) document.body.dataset.sawFlash = "yes";
+        const count = Number(document.body.dataset.flashes || 0);
+        if (document.querySelector(".finale-flash")) document.body.dataset.flashes = String(count + 1);
       }).observe(document.querySelector(".finale-frame"), { childList: true });
     });
-    await p.getByRole("button", { name: "動画を再生する" }).press("Enter");
+    await p.getByRole("button", { name: "パーティーに参加する" }).press("Enter");
     await p.waitForFunction(() => {
       const el = document.querySelector(".finale video");
       return el?.currentTime > .3 && el.webkitAudioDecodedByteCount > 0;
     });
     await p.getByRole("button", { name: "一時停止" }).click();
     assert.ok(await video.evaluate(el => el.paused));
-    await p.getByRole("button", { name: "動画を再生する" }).click();
+    await video.evaluate(el => { el.currentTime = el.duration - 1; });
+    await p.getByRole("button", { name: "再生を続ける" }).click();
     const save = p.getByRole("link", { name: "記念イラストを保存する" });
     await save.waitFor({ timeout: 25000 });
-    assert.equal(await p.locator("body").getAttribute("data-saw-flash"), "yes");
+    assert.equal(await p.locator("body").getAttribute("data-flashes"), "1");
     assert.equal(await p.locator(".finale video").count(), 0);
     const downloadEvent = p.waitForEvent("download");
     await save.click();
@@ -128,10 +130,14 @@ if (process.argv[2] === "serve") {
     assert.deepEqual(await readFile(await download.path()), await readFile("assets/christmas/25/merry-christmas-2026.png"));
     await p.getByRole("button", { name: "もう一度見る" }).click();
     assert.ok(await video.evaluate(el => el.paused && el.currentTime === 0));
-    await p.getByRole("button", { name: "動画を再生する" }).click();
+    await p.getByRole("button", { name: "パーティーに参加する" }).click();
+    await p.getByRole("button", { name: "一時停止" }).waitFor();
+    const skippedVideo = await video.elementHandle();
     await p.getByRole("button", { name: "動画をスキップ" }).click();
+    await save.waitFor();
     assert.equal(await p.locator(".finale video").count(), 0);
-    await p.getByRole("link", { name: "ホームに戻る" }).click();
+    assert.ok(await skippedVideo.evaluate(el => el.paused));
+    await p.getByRole("link", { name: "ホームへ戻る" }).click();
     await p.locator(".room-scene").waitFor();
     assert.equal(await p.locator("video").count(), 0);
 
@@ -140,12 +146,12 @@ if (process.argv[2] === "serve") {
       if (device === "iPhone 13") await phone.route("**" + videoPath, route => route.abort());
       await phone.goto(base + "/calendar/25");
       if (device === "Pixel 7") {
-        await phone.getByRole("button", { name: "動画を再生する" }).tap();
+        await phone.getByRole("button", { name: "パーティーに参加する" }).tap();
         const phoneVideo = phone.locator(".finale video");
         await phone.waitForFunction(() => document.querySelector(".finale video")?.currentTime > 0);
         await phoneVideo.evaluate(el => { el.currentTime = el.duration - .3; });
       } else {
-        await phone.getByRole("button", { name: "動画を再生する" }).tap();
+        await phone.getByRole("button", { name: "パーティーに参加する" }).tap();
         await phone.getByText(/動画を再生できませんでした/).waitFor();
         await phone.getByRole("button", { name: "動画をスキップ" }).tap();
       }
@@ -157,8 +163,19 @@ if (process.argv[2] === "serve") {
         getComputedStyle(el).objectFit === "contain" && el.getBoundingClientRect().right <= window.innerWidth));
       await phone.close();
     }
+    const recovery = await browser.newPage();
+    const pictureRoute = "**" + picturePath;
+    await recovery.route(pictureRoute, route => route.abort());
+    await recovery.goto(base + "/calendar/25");
+    await recovery.getByRole("button", { name: "動画をスキップ" }).click();
+    await recovery.getByRole("status").filter({ hasText: "記念イラストを表示できませんでした" }).waitFor();
+    await recovery.unroute(pictureRoute);
+    await recovery.getByRole("button", { name: "画像を再読み込み" }).click();
+    await recovery.locator(".finale-picture").evaluate(el => el.decode());
+    await recovery.close();
     console.log("Finale: JST release, video range/audio, flash, original PNG download, replay and mobile fallback passed.");
     await clock("2027-01-01T00:00:00");
+    assert.match(await body("/calendar/25"), /クリスマスパーティーへようこそ/);
     await p.goto(base);
     assert.equal(await p.locator("a.door").count(), 25);
     assert.equal(

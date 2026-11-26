@@ -26,6 +26,7 @@ const paths: Record<string, React.ReactNode> = {
     </>
   ),
   check: <path d="m4 13 5 5L20 6" />,
+  bell: <path d="M6 10a6 6 0 0 1 12 0v3l2 4H4l2-4v-3ZM10 20a2 2 0 0 0 4 0M12 2v2" />,
   home: (
     <>
       <path d="m2 11 10-8 10 8M5 10v11h14V10M10 21v-6h4v6" />

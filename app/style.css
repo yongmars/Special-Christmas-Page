@@ -158,7 +158,7 @@ nav a[aria-current]:after {
   content: "";
   position: absolute;
   inset: 7px;
-  border: 1px solid #d8b47188;
+  border: 1px solid #d8b47155;
   border-radius: 6px;
   pointer-events: none;
   z-index: 3;
@@ -179,7 +179,7 @@ nav a[aria-current]:after {
       0/87px 93px,
     radial-gradient(circle at 67% 76%, #beac85 0 0.9px, transparent 1.5px) 0
       0/67px 83px;
-  opacity: 0.44;
+  opacity: 0.32;
   mask-image: linear-gradient(90deg, #000 40%, transparent);
 }
 .hero-kicker,
@@ -364,8 +364,9 @@ nav a[aria-current]:after {
   gap: 16px;
   padding: 16px clamp(16px, 3vw, 42px);
   border-radius: 0 0 11px 11px;
-  box-shadow: 0 4px 10px #62513812;
+  box-shadow: 0 2px 5px #6251380d;
 }
+.present-bar .red { box-shadow: inset 0 0 0 1px #c4767170; }
 .countdown {
   display: flex;
   align-items: center;
@@ -458,6 +459,127 @@ nav a[aria-current]:after {
   display: block;
   line-height: 1.3;
 }
+#calendar {
+  position: relative;
+  isolation: isolate;
+  max-width: 710px;
+  margin-inline: auto;
+  padding-block: 26px 17px;
+}
+#calendar::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 calc(-1 * clamp(7px, 1vw, 14px));
+  border: 1px solid #a05942;
+  border-radius: 13px;
+  background:
+    linear-gradient(90deg, transparent, #bd9655 25% 75%, transparent) center top / 46% 2px no-repeat,
+    radial-gradient(circle at 28px 36px, #fffefa 0 1.4px, transparent 2px) 0 0 / 93px 81px,
+    radial-gradient(circle at 61px 68px, #fffdf4 0 1px, transparent 1.6px) 0 0 / 137px 109px,
+    radial-gradient(ellipse 1px 5px at 76px 21px, #b28b4e30, transparent) 0 0 / 157px 113px,
+    radial-gradient(ellipse 5px 1px at 76px 21px, #b28b4e30, transparent) 0 0 / 157px 113px,
+    radial-gradient(circle at 44px 90px, #d3a35024 0 1.5px, transparent 2px) 0 0 / 113px 147px,
+    radial-gradient(ellipse at top, #fffaf0, transparent 65%),
+    linear-gradient(155deg, #fff3da, #eddbbb);
+  box-shadow: inset 0 0 0 3px #994c40, inset 0 0 0 4px #e5b76e,
+    inset 0 -8px 0 #a8654829, 0 4px 12px #60472826;
+  pointer-events: none;
+}
+#calendar::after {
+  content: "";
+  position: absolute;
+  inset: 0 8px auto;
+  height: 13px;
+  border-radius: 0 0 5px 5px;
+  background:
+    radial-gradient(ellipse at center, #fff5c6 0 1px, #e9aa4eb0 2px, transparent 5px) center / 28px 13px repeat-x,
+    linear-gradient(#9a4f42, #783934 75%, #e4af62 88%, #a45b40);
+  pointer-events: none;
+}
+.calendar-crest {
+  position: absolute;
+  z-index: 1;
+  inset: -16px 0 auto;
+  width: clamp(120px, 27vw, 215px);
+  height: 33px;
+  margin-inline: auto;
+  pointer-events: none;
+}
+.calendar-crest::before,
+.calendar-crest::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  width: 30%;
+  height: 19px;
+  background:
+    radial-gradient(circle at 65% 47%, #c97960 0 1px, #9d3f3f 2px, transparent 3px),
+    radial-gradient(circle at 76% 57%, #cc8764 0 1px, #943a3b 2px, transparent 3px),
+    radial-gradient(circle at 40% 53%, #f5cc78 0 1px, transparent 2px),
+    linear-gradient(160deg, #6f8963, #244e3d 72%);
+  clip-path: polygon(0 39%, 24% 43%, 18% 8%, 42% 35%, 39% 5%, 58% 32%, 62% 0, 74% 32%, 90% 10%, 88% 39%, 100% 63%, 74% 71%, 58% 100%, 58% 73%, 34% 93%, 37% 64%, 17% 76%);
+}
+.calendar-crest::before { left: 0; }
+.calendar-crest::after { right: 0; transform: scaleX(-1); }
+.calendar-roof {
+  position: absolute;
+  inset: 0 24% 0;
+  display: grid;
+  place-items: end center;
+  padding-bottom: 4px;
+  color: #ffe8a8;
+  background: linear-gradient(#b6634c, #7d3434 70%, #e3b269 71% 77%, #864638 78%);
+  clip-path: polygon(50% 0, 100% 72%, 95% 92%, 81% 82%, 81% 100%, 19% 100%, 19% 82%, 5% 92%, 0 72%);
+}
+#calendar .section-heading {
+  padding-bottom: 8px;
+  border-bottom: 1px solid #b18a4e4f;
+}
+#calendar .heading-icon {
+  position: relative;
+  border-color: #bfa46e;
+  background: #e8ebdc;
+}
+#calendar .heading-icon::before,
+#calendar .heading-icon::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+#calendar .heading-icon::before {
+  top: -8px;
+  left: -6px;
+  width: 29px;
+  height: 16px;
+  background: linear-gradient(140deg, #72916a, #294d3b 80%);
+  clip-path: polygon(0 33%, 31% 29%, 22% 0, 48% 30%, 44% 2%, 64% 30%, 65% 7%, 80% 29%, 100% 33%, 81% 48%, 66% 81%, 65% 52%, 48% 92%, 47% 55%, 25% 100%, 29% 54%);
+  transform: rotate(-24deg);
+}
+#calendar .heading-icon::after {
+  top: -4px;
+  left: 5px;
+  width: 12px;
+  height: 10px;
+  background:
+    radial-gradient(circle at 28% 35%, #c96c5a 0, #943d42 2px, transparent 2.5px),
+    radial-gradient(circle at 68% 34%, #b95a50 0, #87323a 2px, transparent 2.5px),
+    radial-gradient(circle at 48% 72%, #b45248 0, #87323a 2px, transparent 2.5px);
+}
+#calendar .section-heading .eyebrow::after,
+.door-finale::after {
+  content: "";
+  background: linear-gradient(135deg, #f6e2a9, #a5742f);
+  clip-path: polygon(50% 0, 63% 37%, 100% 50%, 63% 63%, 50% 100%, 37% 63%, 0 50%, 37% 37%);
+  pointer-events: none;
+}
+#calendar .section-heading .eyebrow::after {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-inline-start: 5px;
+  vertical-align: 1px;
+}
 .heading-meta {
   margin-left: auto;
   white-space: nowrap;
@@ -483,10 +605,11 @@ nav a[aria-current]:after {
 }
 .doors {
   display: grid;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 9px;
 }
 .door {
+  --door-shading: inset 0 2px 3px #fff5d930, inset 0 -4px 5px #231b2429;
   position: relative;
   min-height: 90px;
   display: flex;
@@ -499,18 +622,33 @@ nav a[aria-current]:after {
   background: var(--doorbg);
   color: var(--ink);
   font-family: Georgia, serif;
-  box-shadow: inset 0 -3px 0 #00000014;
+  box-shadow: var(--door-shading), 0 1px 2px #4d38251c;
   padding: 8px 2px;
 }
 .door:before {
   content: "";
   position: absolute;
   inset: 4px;
-  border: 1px solid var(--edge);
+  border: 1px solid #bd985c;
   border-radius: 16px 16px 2px 2px;
+  background: radial-gradient(circle 3.5px at center, #fff1ba, #bd8d47 54%, #825823 80%, transparent 100%)
+    right 4px bottom 5px / 7px 7px no-repeat;
   pointer-events: none;
   opacity: 0.75;
+  box-shadow: inset 0 1px 1px #fff0bb40, 0 1px 1px #37230f33;
 }
+.door-finale::before {
+  border-color: #b48538;
+  opacity: 1;
+  box-shadow: inset 0 0 0 1px #fff0c2, 0 0 5px #c99b5370;
+}
+.door-finale::after {
+  position: absolute;
+  inset: 13px 9px auto auto;
+  width: 10px;
+  height: 10px;
+}
+.door-finale .door-mark { text-shadow: 0 0 6px #d69745a6; }
 .door strong {
   font-size: 31px;
   line-height: 1.15;
@@ -520,50 +658,86 @@ nav a[aria-current]:after {
   font-size: 11px;
   line-height: 13px;
 }
+.door-mark svg {
+  display: block;
+  color: var(--door-ornament, #f2d49b);
+}
 .door > svg {
   margin-top: 5px;
 }
-.tone0 {
+.tone-noct {
   --doorbg: #305447;
   --ink: #f3dfb1;
   --edge: #a7996b;
 }
-.tone1 {
+.tone-game {
   --doorbg: #91484b;
   --ink: #ffebc9;
   --edge: #b99674;
 }
-.tone2 {
+.tone-quiz {
+  --door-ornament: #8c5732;
   --doorbg: #e6d9b8;
   --ink: #645338;
   --edge: #ad9873;
 }
-.tone3 {
+.tone-illustration {
   --doorbg: #314c59;
   --ink: #eedaba;
   --edge: #a79774;
 }
-.tone4 {
+.tone-special {
+  --door-ornament: #84533c;
   --doorbg: #e9e3cd;
   --ink: #52614b;
   --edge: #a9aa8b;
 }
+.tone-lux {
+  --doorbg: #a15b32;
+  --ink: #fff0ce;
+  --edge: #ca9a69;
+}
+.tone-first {
+  --door-ornament: #9b6935;
+  --doorbg: #fff2cf;
+  --ink: #765231;
+  --edge: #be9250;
+}
+.tone-finale {
+  --doorbg: #593746;
+  --ink: #ffe7a9;
+  --edge: #c69b59;
+}
+.door.available {
+  transition: filter .16s ease, transform .16s ease;
+}
+.door.available:is(:hover, :focus-visible) {
+  filter: brightness(1.075);
+  text-decoration: none;
+}
 .door.available:hover {
   transform: translateY(-2px);
-  text-decoration: none;
-  box-shadow: 0 3px 6px #51432d33;
 }
-.door.opened {
-  background: #f5f1e5;
-  --ink: #526752;
-  --edge: #92a087;
+.door.opened > svg {
+  color: #365641;
+  border-radius: 50%;
+  background: #dbe7d1;
+  box-shadow: 0 0 0 2px #dbe7d1;
 }
 .door.today {
   outline: 3px solid #b7862d;
   outline-offset: 1px;
+  box-shadow: var(--door-shading), 0 0 10px 3px #ddb34f77, inset 0 0 9px #f9d58c68;
 }
 .today .door-mark {
   font: 700 11px sans-serif;
+}
+.door.today:focus-visible {
+  outline-color: #91484b;
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .door.available:hover { transform: none; }
 }
 .game-cards {
   display: grid;
@@ -922,11 +1096,6 @@ html:has(.memory-preview[open]) {
   color: #996b1e;
   text-align: center;
 }
-@media (min-width: 1050px) {
-  .doors {
-    grid-template-columns: repeat(13, minmax(0, 1fr));
-  }
-}
 @media (max-width: 900px) {
   .nav-wrap,
   .wrap {
@@ -941,9 +1110,6 @@ html:has(.memory-preview[open]) {
   }
   .hero-copy p {
     font-size: 14px;
-  }
-  .doors {
-    grid-template-columns: repeat(8, minmax(0, 1fr));
   }
   .room-scene {
     align-self: center;
@@ -1095,8 +1261,12 @@ html:has(.memory-preview[open]) {
     margin: 8px 0 10px;
   }
   .doors {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 8px;
+  }
+  .door-finale::after {
+    inset: 10px 7px auto auto;
+    width: 7px;
+    height: 7px;
   }
   .door {
     min-height: 78px;
@@ -1209,6 +1379,17 @@ html:has(.book-dialog[open]) { overflow: hidden; }
   object-fit: contain;
 }
 .finale-picture:not([hidden]) { display: block; }
+.finale-image-error {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  padding: 8px;
+  color: #fff7e7;
+  text-align: center;
+}
+.finale-image-error .action { min-height: 44px; }
 .finale-message {
   color: #29493d;
   font-weight: 700;
@@ -1234,18 +1415,20 @@ html:has(.book-dialog[open]) { overflow: hidden; }
   color: #394b40;
 }
 @media (prefers-reduced-motion: no-preference) {
+  .finale-frame-reveal { background: white; }
   .finale-flash {
     position: absolute;
     inset: 0;
     pointer-events: none;
     background: white;
-    animation: finale-flash .25s ease-out both;
+    animation: finale-flash .48s ease-out both;
   }
-  .finale-picture:not([hidden]) { animation: finale-reveal .4s ease-out both; }
+  .finale-frame-reveal .finale-picture:not([hidden]) {
+    animation: finale-reveal .8s ease-out both;
+  }
   @keyframes finale-flash {
     0% { opacity: 0; }
-    25% { opacity: .86; }
-    100% { opacity: 0; }
+    35%, 100% { opacity: 1; }
   }
   @keyframes finale-reveal { from { opacity: 0; } }
 }

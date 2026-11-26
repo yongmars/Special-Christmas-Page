@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import rawGames from "@/content/games.json";
 import { tokyoDate, validDate } from "./season";
-import type { Context, Day, Game } from "./types";
+import { doorTone, type Context, type Day, type Game } from "./types";
 export const games = rawGames as Game[];
 export async function readDay(n: number): Promise<Day> {
   const data = await readFile(
@@ -39,6 +39,7 @@ export async function context(
     preview: dev && preview,
     doors: all.map((d) => ({
       day: d.day,
+      tone: doorTone(d),
       releaseDate: release(d),
       available: date >= release(d),
       gameId: d.kind === "game" ? d.gameId : undefined,

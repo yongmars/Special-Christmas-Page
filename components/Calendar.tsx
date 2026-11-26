@@ -2,6 +2,8 @@ import { Link } from "@/lib/navigation";
 import { Icon } from "./Icon";
 import { Context, url } from "@/lib/types";
 import { season } from "@/lib/season";
+
+const doorOrnaments = ["tree", "snow", "gift", "bell", "star"];
 export function Heading({
   en,
   title,
@@ -30,6 +32,9 @@ export function Calendar({ ctx, opened }: { ctx: Context; opened: number[] }) {
   const { today } = season(ctx.date);
   return (
     <section className="section" id="calendar">
+      <div className="calendar-crest" aria-hidden="true">
+        <span className="calendar-roof"><Icon name="star" size={13} /></span>
+      </div>
       <Heading
         en="ADVENT CALENDAR"
         title="アドベントカレンダー"
@@ -53,12 +58,12 @@ export function Calendar({ ctx, opened }: { ctx: Context; opened: number[] }) {
         </small>
       </div>
       <div className="doors">
-        {ctx.doors.map(({ day, available, releaseDate }) => {
+        {ctx.doors.map(({ day, tone, available, releaseDate }) => {
           const open = available && opened.includes(day),
             isToday = today === day;
           const cls =
-            "door tone" +
-            ((day - 1) % 5) +
+            "door tone-" + tone +
+            (day === 25 ? " door-finale" : "") +
             (available ? " available" : "") +
             (open ? " opened" : "") +
             (isToday ? " today" : "");
@@ -75,7 +80,9 @@ export function Calendar({ ctx, opened }: { ctx: Context; opened: number[] }) {
           const face = (
             <>
               <span className="door-mark" aria-hidden="true">
-                {isToday ? "今日" : day === 25 ? "✦" : "✧"}
+                {isToday ? "今日" : day === 25 ? "✦" : (
+                  <Icon name={doorOrnaments[(day - 1 + Math.floor((day - 1) / 5)) % doorOrnaments.length]} size={13} />
+                )}
               </span>
               <strong>{String(day).padStart(2, "0")}</strong>
               <Icon

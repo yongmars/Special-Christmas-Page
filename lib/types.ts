@@ -49,10 +49,21 @@ export type Game = {
 };
 export type Door = {
   day: number;
+  tone: ReturnType<typeof doorTone>;
   available: boolean;
   releaseDate: string;
   gameId?: GameId;
 };
+export function doorTone(day: Day) {
+  if (day.day === 1) return "first";
+  if (day.day === 25) return "finale";
+  if (day.kind === "story" && day.series === "lux") return "lux";
+  if (day.kind === "story" && day.series === "noct") return "noct";
+  if (day.kind === "game") return "game";
+  if (day.kind === "quiz") return "quiz";
+  if (day.kind === "illustration" || day.day === 20) return "illustration";
+  return "special";
+}
 export type Context = {
   date: string;
   preview: boolean;

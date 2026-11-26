@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Site } from "@/components/Site";
 import { tokyoDate } from "@/lib/season";
 import { mount, publicPath } from "@/lib/public-path";
-import type { Context, Day, Game } from "@/lib/types";
+import { doorTone, type Context, type Day, type Game } from "@/lib/types";
 import rawGames from "@/content/games.json";
 import "@/app/style.css";
 
@@ -19,7 +19,7 @@ function CalendarApp({ days }: { days: Day[] }) {
   const doors = days.map(d => {
     const game = d.kind === "game" ? games.find(g => g.id === d.gameId) : undefined;
     const releaseDate = game?.releaseDate ?? d.releaseDate!;
-    return { day: d.day, gameId: game?.id, releaseDate, available: date >= releaseDate };
+    return { day: d.day, tone: doorTone(d), gameId: game?.id, releaseDate, available: date >= releaseDate };
   });
   const ctx: Context = { now, date, doors, preview: false, dev: false };
   const route = location.pathname.slice(mount.length).replace(/\/index\.html$/, "").replace(/\/$/, "");
